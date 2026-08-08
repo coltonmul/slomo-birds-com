@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Workflow &middot; Slow Motion Birds</title>
+<meta name="description" content="The full pipeline behind the footage, current state and future state: from card dump to the daily 60-second clip. Versioned, so nothing gets lost.">
+<meta property="og:title" content="The Workflow &middot; Slow Motion Birds">
+<meta property="og:description" content="From card dump to the daily 60-second clip: the whole pipeline, current state and future state.">
+<meta property="og:image" content="https://slowmotionbirds.com/field-notes-og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-size='22'>🐦</text></svg>">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --pitch:#0C0E10; --linen:#F0EBE0; --dust:#9A917E; --sun:#E8A13A; --line:#23262B; --panel:#12151A; --ok:#8FBF7F; --warn:#E6C87E; }
+html { background: var(--pitch); scroll-behavior: smooth; }
+body { font-family:'DM Sans',sans-serif; font-weight:300; color:var(--linen); background:var(--pitch); line-height:1.65; }
+a { color: inherit; text-decoration: none; }
+.wrap { max-width: 880px; margin: 0 auto; padding: 60px 30px 40px; }
+.annot { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--dust); margin-bottom:12px; }
+.annot a { color: var(--sun); }
+h1 { font-family:'Big Shoulders Display',sans-serif; font-weight:900; font-size:clamp(44px,8vw,84px); line-height:.88; text-transform:uppercase; }
+h1 .sun { color: var(--sun); }
+.lede { max-width:640px; margin-top:16px; font-size:15px; color:#CFC8B8; }
+.stamp { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--dust); margin-top:8px; }
+h2 { font-family:'Big Shoulders Display',sans-serif; font-weight:700; font-size:clamp(22px,3vw,32px); text-transform:uppercase; margin:44px 0 14px; }
+p { max-width: 660px; margin: 0 0 12px; font-size:14.5px; }
+.muted { color: var(--dust); font-size: 13px; }
+.step { display:grid; grid-template-columns: 46px 1fr; gap:16px; border:0.5px solid var(--line); background:var(--panel); border-radius:4px; padding:18px 20px; margin-bottom:10px; }
+.num { font-family:'Big Shoulders Display',sans-serif; font-weight:900; font-size:34px; line-height:1; color:var(--dust); padding-top:2px; }
+.step h3 { font-size:15.5px; font-weight:500; margin-bottom:5px; }
+.step h3 .chip { margin-left:8px; }
+.step p { font-size:13.5px; color:#CFC8B8; margin-bottom:6px; max-width:none; }
+.fs { font-family:'DM Mono',monospace; font-size:10.5px; letter-spacing:.06em; color:var(--dust); }
+.fs b { color:var(--sun); font-weight:500; }
+.chip { display:inline-block; font-family:'DM Mono',monospace; font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; border-radius:2px; padding:2px 8px; vertical-align:middle; }
+.c-live { color:var(--pitch); background:var(--ok); }
+.c-built { color:var(--pitch); background:var(--warn); }
+.c-design { color:var(--sun); border:0.5px solid var(--sun); }
+.c-wait { color:var(--dust); border:0.5px solid var(--dust); }
+.c-future { color:var(--dust); border:0.5px dashed var(--line); background:var(--pitch); }
+.legend { display:flex; gap:10px; flex-wrap:wrap; margin:6px 0 20px; }
+.statusbox { border:0.5px solid var(--sun); border-radius:4px; padding:18px 20px; background:var(--panel); margin-top:16px; }
+.statusbox h3 { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--sun); margin-bottom:10px; }
+.statusbox li { font-size:13.5px; color:#CFC8B8; margin-bottom:6px; }
+ul { max-width:660px; padding-left:20px; }
+details { border:0.5px solid var(--line); border-radius:4px; margin-top:30px; }
+summary { cursor:pointer; padding:14px 18px; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--dust); }
+details .in { padding: 0 18px 16px; }
+.footer { border-top:0.5px solid var(--line); margin-top:56px; padding:26px 30px; text-align:center; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust); }
+.footer a:hover { color: var(--sun); }
+@media (max-width:560px){ .step{grid-template-columns:34px 1fr; padding:14px;} .num{font-size:26px;} .wrap{padding:44px 18px 30px;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="annot"><a href="/">&larr; slowmotionbirds.com</a> &nbsp;&middot;&nbsp; field notes</div>
+  <h1>The<br><span class="sun">Workflow.</span></h1>
+  <p class="lede">Everything between pressing record and a finished film is becoming a pipeline. This page is its paper trail: every stage, what is real today versus where it ends up, updated and versioned every time something changes. If anything ever breaks, or the thread ever gets lost, this page is the recovery map.</p>
+  <p class="stamp">v1.0.0 &middot; Updated Sat / 2026-08-08 / night CT</p>
+
+  <h2>The loop, end to end</h2>
+  <div class="legend">
+    <span class="chip c-live">live</span>
+    <span class="chip c-built">built + tested</span>
+    <span class="chip c-design">designed</span>
+    <span class="chip c-wait">waiting on input</span>
+    <span class="chip c-future">future</span>
+  </div>
+
+  <div class="step"><div class="num">1</div><div>
+    <h3>Shoot <span class="chip c-live">live</span></h3>
+    <p>Sony a7S III, 4K 120fps, second base ISO 12,800, shutters 1/1000 to 1/4000. Settings come from the <a href="/light-and-lens/" style="color:var(--sun)">Light &amp; Lens Calculator</a>. This step stays human forever; it is the fun part.</p>
+    <div class="fs">Future: unchanged.</div>
+  </div></div>
+
+  <div class="step"><div class="num">2</div><div>
+    <h3>Card dump <span class="chip c-wait">waiting on storage move</span></h3>
+    <p>Today: files copy to an archive drive by hand. The storage consolidation in progress puts everything on network storage that every machine sees identically.</p>
+    <div class="fs">Future: <b>drop the card folder in one place, done.</b> A watcher notices new sessions on its own.</div>
+  </div></div>
+
+  <div class="step"><div class="num">3</div><div>
+    <h3>Timeline assembly <span class="chip c-design">designed</span></h3>
+    <p>Today: every clip gets dumped onto a Premiere timeline by hand and slowed to 20%. Designed: the pipeline builds that timeline itself from the session folder, clips in recorded order, slow motion applied, and logs the order it chose.</p>
+    <div class="fs">Future: <b>nobody assembles timelines.</b></div>
+  </div></div>
+
+  <div class="step"><div class="num">4</div><div>
+    <h3>Overnight analysis <span class="chip c-built">built + tested</span></h3>
+    <p>The detection engine (a Python system called birdselects) watches every frame at low resolution: background modeling, painted zones per camera setup, motion scoring, event logic with pre-roll and post-roll handles. It runs unattended on the always-on machine against the shared storage, so nothing interrupts it. The engine passed its full test suite tonight, including a synthetic-footage run at 100% recall.</p>
+    <div class="fs">Future: every new session analyzed the night it lands. Spec: AUTOMATION-SPEC.md in the project folder.</div>
+  </div></div>
+
+  <div class="step"><div class="num">5</div><div>
+    <h3>Grading, 0 to 5 <span class="chip c-design">designed</span></h3>
+    <p>Every stretch gets a level from the <a href="/footage-levels/" style="color:var(--sun)">footage ladder</a>: dead air to banger. Levels 0-3 come straight from motion signals; the 4/5 line starts as heuristics and learns.</p>
+    <div class="fs">Future: grading accuracy tracked here, per camera setup.</div>
+  </div></div>
+
+  <div class="step"><div class="num">6</div><div>
+    <h3>The graded timeline returns <span class="chip c-wait">waiting on first footage handoff</span></h3>
+    <p>A new sequence appears in Premiere: the untouched original on track 1, and every graded moment lifted to the track matching its level, V2 through V5, with markers and a thumbnail contact sheet. The original is never edited by software; the worst any bug can do is make a bad duplicate.</p>
+    <div class="fs">First live round-trip runs the day a footage folder is pointed at. Everything is staged for it.</div>
+  </div></div>
+
+  <div class="step"><div class="num">7</div><div>
+    <h3>Review = training <span class="chip c-design">designed</span></h3>
+    <p>Reviewing means watching the top tracks and dragging anything misgraded up or down a track. The system re-reads the reviewed timeline and adjusts its thresholds. Ordinary editing is the calibration; there is no separate feedback chore.</p>
+    <div class="fs">Future: each review measurably sharpens the next night's grades.</div>
+  </div></div>
+
+  <div class="step"><div class="num">8</div><div>
+    <h3>The daily 60-second clip <span class="chip c-future">future</span></h3>
+    <p>The best of the newest footage, cut to about a minute, in two versions. Version one: clean, no captions, silent, because Instagram supplies licensed music in-app at posting time. Version two: translucent captions carrying real facts about the exact birds on screen (species identification with confidence gates, facts drafted with sources, human-checked), music baked in from the licensed library for YouTube.</p>
+    <div class="fs">Depends on the species phase; the cut-selection math already exists in the level system.</div>
+  </div></div>
+
+  <div class="step"><div class="num">9</div><div>
+    <h3>Publish <span class="chip c-future">future</span></h3>
+    <p>Drafts land finished: YouTube upload staged with title, description, and chapters; the Instagram pair sitting in a folder the phone reaches. One tap approves and it goes live; Instagram stays a manual phone upload by design. Fully hands-off publishing without the approval tap exists as a switch, deliberately off until flipped on a calm day.</p>
+    <div class="fs">Future: the card dump on Monday becomes the post on Tuesday, one tap in between.</div>
+  </div></div>
+
+  <div class="step"><div class="num">10</div><div>
+    <h3>The archive sweep <span class="chip c-future">future</span></h3>
+    <p>Three years of backlog: feeder seasons, snow days, and travel footage from around the world, run through the same pipe, graded into the same ladder, feeding films and daily clips for a very long time.</p>
+    <div class="fs">Future: the backlog becomes a queue, not a burden.</div>
+  </div></div>
+
+  <div class="statusbox">
+    <h3>Current state, plainly &middot; 2026-08-08</h3>
+    <ul>
+      <li>Detection engine: written, reviewed, all tests passing on real hardware tonight.</li>
+      <li>Level system, track output, regrading loop, auto punch-in stages: fully designed and specified.</li>
+      <li>This site's field notes (<a href="/footage-levels/" style="color:var(--sun)">levels</a>, <a href="/light-and-lens/" style="color:var(--sun)">calculator</a>, this page): live.</li>
+      <li>Next milestone: the first real round trip through Premiere, which starts the day a footage folder is named.</li>
+      <li>Waiting on exactly one thing: that folder.</li>
+    </ul>
+  </div>
+
+  <details>
+    <summary>Changelog</summary>
+    <div class="in">
+      <p class="muted">v1.0.0 (2026-08-08): First edition of the workflow page: the ten-stage loop with live status chips, the two-version daily clip plan (clean for Instagram in-app music, captioned facts version for YouTube), the one-tap publish policy, and the archive-sweep end state. Same-day context: detection engine landed and tested; levels and calculator pages went live.</p>
+    </div>
+  </details>
+</div>
+<footer class="footer">
+  <a href="/">slowmotionbirds.com</a> &nbsp;&middot;&nbsp; <a href="/footage-levels/">Footage Levels</a> &nbsp;&middot;&nbsp; <a href="/light-and-lens/">Light &amp; Lens Calculator</a> &nbsp;&middot;&nbsp; &copy; 2026
+</footer>
+</body>
+</html>
