@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Footage Levels &middot; Slow Motion Birds</title>
+<meta name="description" content="The 0-5 grading ladder every clip of slow motion bird footage gets sorted into, from dead air to the daily banger.">
+<meta property="og:title" content="Footage Levels &middot; Slow Motion Birds">
+<meta property="og:description" content="The 0-5 grading ladder every clip of slow motion bird footage gets sorted into.">
+<meta property="og:image" content="https://slowmotionbirds.com/field-notes-og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-size='22'>🐦</text></svg>">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --pitch:#0C0E10; --linen:#F0EBE0; --dust:#9A917E; --sun:#E8A13A; --line:#23262B; --panel:#12151A; }
+html { background: var(--pitch); scroll-behavior: smooth; }
+body { font-family:'DM Sans',sans-serif; font-weight:300; color:var(--linen); background:var(--pitch); line-height:1.65; }
+a { color: inherit; text-decoration: none; }
+.wrap { max-width: 880px; margin: 0 auto; padding: 60px 30px 40px; }
+.annot { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--dust); margin-bottom:12px; }
+.annot a { color: var(--sun); }
+h1 { font-family:'Big Shoulders Display',sans-serif; font-weight:900; font-size:clamp(44px,8vw,84px); line-height:.88; text-transform:uppercase; }
+h1 .sun { color: var(--sun); }
+.lede { max-width:600px; margin-top:16px; font-size:15px; color:#CFC8B8; }
+h2 { font-family:'Big Shoulders Display',sans-serif; font-weight:700; font-size:clamp(22px,3vw,32px); text-transform:uppercase; margin:44px 0 12px; }
+p { max-width: 640px; margin: 0 0 12px; font-size:14.5px; }
+.muted { color: var(--dust); font-size: 13px; }
+.level { display:grid; grid-template-columns: 84px 1fr; gap:18px; border:0.5px solid var(--line); background:var(--panel); border-radius:4px; padding:20px 22px; margin-bottom:10px; }
+.lv { font-family:'Big Shoulders Display',sans-serif; font-weight:900; font-size:56px; line-height:1; text-align:center; align-self:center; }
+.lv small { display:block; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.18em; text-transform:uppercase; margin-top:4px; font-weight:400; }
+.l5 .lv { color:var(--sun); } .l4 .lv { color:#E6C87E; } .l3 .lv { color:var(--linen); } .l2 .lv { color:#B9B2A0; } .l1 .lv, .l0 .lv { color:var(--dust); }
+.level h3 { font-size:16px; font-weight:500; margin-bottom:4px; }
+.level p { font-size:13.5px; color:#CFC8B8; margin-bottom:6px; }
+.use { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust); }
+.use b { color:var(--sun); font-weight:500; }
+.stamp { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--dust); margin-top:8px; }
+details { border:0.5px solid var(--line); border-radius:4px; margin-top:30px; }
+summary { cursor:pointer; padding:14px 18px; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--dust); }
+details .in { padding: 0 18px 16px; }
+.footer { border-top:0.5px solid var(--line); margin-top:56px; padding:26px 30px; text-align:center; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust); }
+.footer a:hover { color: var(--sun); }
+@media (max-width:560px){ .level{grid-template-columns:56px 1fr; padding:16px;} .lv{font-size:40px;} .wrap{padding:44px 18px 30px;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="annot"><a href="/">&larr; slowmotionbirds.com</a> &nbsp;&middot;&nbsp; field notes</div>
+  <h1>The Footage<br><span class="sun">Levels.</span></h1>
+  <p class="lede">Every stretch of slow motion bird footage gets graded 0 through 5. The grade decides where it goes: the daily clip, the films, the ambient mixes, or the archive. An automated pass assigns the first grade from how much is actually happening in frame; the final call is always human, and every human correction teaches the system this yard's version of interesting.</p>
+  <p class="stamp">v1.0.0 &middot; Updated Sat / 2026-08-08 / evening CT</p>
+
+  <div style="margin-top:36px;">
+    <div class="level l5">
+      <div class="lv">5<small>banger</small></div>
+      <div>
+        <h3>The 60-second clip you send people</h3>
+        <p>Birds fighting mid-air. Hummingbirds doing hummingbird things. Multiple species on screen negotiating who owns the feeder. Peak motion, peak drama, no dead frames.</p>
+        <div class="use">Feeds: <b>daily social clip</b> &middot; film openers</div>
+      </div>
+    </div>
+    <div class="level l4">
+      <div class="lv">4<small>strong</small></div>
+      <div>
+        <h3>Whole sequences that hold attention</h3>
+        <p>Sustained interesting action: arrivals and takeoffs stacking up, active squabbles, several distinct moments per minute. Not quite a banger, never boring.</p>
+        <div class="use">Feeds: <b>the films</b> &middot; strong cuts</div>
+      </div>
+    </div>
+    <div class="level l3">
+      <div class="lv">3<small>the cut</small></div>
+      <div>
+        <h3>Moving and going</h3>
+        <p>Birds relocating, feeding flurries, real motion without aggression. The workhorse tier: most of what makes a watchable long-form film lives here.</p>
+        <div class="use">Feeds: <b>standard selects</b></div>
+      </div>
+    </div>
+    <div class="level l2">
+      <div class="lv">2<small>ambient</small></div>
+      <div>
+        <h3>The background layer</h3>
+        <p>Minimal activity, but deliberately kept. This is the connective tissue of a ten-hour ambient mix: mostly calm, so that when something moves in your periphery, it feels like you caught it yourself.</p>
+        <div class="use">Feeds: <b>ambient mixes</b> &middot; long-form TV loops</div>
+      </div>
+    </div>
+    <div class="level l1">
+      <div class="lv">1<small>logged</small></div>
+      <div>
+        <h3>Bird present, nothing happening</h3>
+        <p>A finch parked at a port, pecking, for a long stretch. On record, searchable, and almost never used.</p>
+        <div class="use">Feeds: nothing by default &middot; kept in the log</div>
+      </div>
+    </div>
+    <div class="level l0">
+      <div class="lv">0<small>dead</small></div>
+      <div>
+        <h3>The camera was just running</h3>
+        <p>Empty frame, swaying branches, no visitors. Flagged so nobody ever reviews it again.</p>
+        <div class="use">Feeds: nothing &middot; flagged dead</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>How grading works</h2>
+  <p>A motion-analysis pass watches every frame and scores what the eye would: how much movement, how fast, how many birds, arrivals and exits, wing bursts versus idle pecking. Levels 0 through 3 come from that signal directly. The 4/5 line involves judgment (a fight and a feeding flurry can carry similar energy), so the top tiers start as educated guesses and get corrected in review.</p>
+  <p>The correction is the clever part: in the edit, each graded clip sits on the video track matching its level. Regrading a clip means dragging it up or down a track, which takes one second, and the system reads those corrections back and adjusts its thresholds for that camera setup. Reviewing the footage <em>is</em> training it.</p>
+  <p class="muted">Known edge case under calibration: the rotating feeder, whose spin reads as constant motion. Its zone gets its own raised baseline so the spin itself never inflates a grade.</p>
+
+  <details>
+    <summary>Changelog</summary>
+    <div class="in">
+      <p class="muted">v1.0.0 (2026-08-08): First public write-up of the level system: six levels, definitions, destinations, and the track-based regrading loop.</p>
+    </div>
+  </details>
+</div>
+<footer class="footer">
+  <a href="/">slowmotionbirds.com</a> &nbsp;&middot;&nbsp; <a href="/light-and-lens/">Light &amp; Lens Calculator</a> &nbsp;&middot;&nbsp; &copy; 2026
+</footer>
+</body>
+</html>
