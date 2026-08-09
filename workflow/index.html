@@ -61,7 +61,7 @@ details .in { padding: 0 18px 16px; }
   <div class="annot"><a href="/">&larr; slowmotionbirds.com</a> &nbsp;&middot;&nbsp; field notes</div>
   <h1>The<br><span class="sun">Workflow.</span></h1>
   <p class="lede">Everything between pressing record and a finished film is becoming a pipeline. This page is its paper trail: every stage, what is real today versus where it ends up, updated and versioned every time something changes. If anything ever breaks, or the thread ever gets lost, this page is the recovery map.</p>
-  <p class="stamp">v1.0.5 &middot; Updated Sun / 2026-08-09 / 10:50 AM CT</p>
+  <p class="stamp">v1.1.0 &middot; Updated Sun / 2026-08-09 / 12:15 PM CT</p>
 
   <h2>The loop, end to end</h2>
   <div class="legend">
@@ -85,9 +85,9 @@ details .in { padding: 0 18px 16px; }
   </div></div>
 
   <div class="step"><div class="num">3</div><div>
-    <h3>Timeline assembly <span class="chip c-design">designed</span></h3>
-    <p>Today: every clip gets dumped onto a Premiere timeline by hand and slowed to 20%. Designed: the pipeline builds that timeline itself from the session folder, clips in recorded order, slow motion applied, and logs the order it chose.</p>
-    <div class="fs">Future: <b>nobody assembles timelines.</b></div>
+    <h3>Timeline assembly <span class="chip c-live">live</span></h3>
+    <p>Nobody dumped clips by hand this time: the pipeline built the Dec 30 session's timeline itself from the session folder, all 55 clips in recorded order, slowed to 20%, audio attached, by cloning Premiere's own file structures. First real run 2026-08-09.</p>
+    <div class="fs">Future: <b>nobody assembles timelines.</b> That future started today; it just needs to happen for every new session automatically.</div>
   </div></div>
 
   <div class="step"><div class="num">4</div><div>
@@ -97,21 +97,21 @@ details .in { padding: 0 18px 16px; }
   </div></div>
 
   <div class="step"><div class="num">5</div><div>
-    <h3>Grading, 0 to 5 <span class="chip c-design">designed</span></h3>
-    <p>Every stretch gets a level from the <a href="/footage-levels/" style="color:var(--sun)">footage ladder</a>: dead air to banger. Levels 0-3 come straight from motion signals; the 4/5 line starts as heuristics and learns.</p>
-    <div class="fs">Future: grading accuracy tracked here, per camera setup.</div>
+    <h3>Grading, 0 to 5 <span class="chip c-live">provisional live</span></h3>
+    <p>Every stretch gets a level from the <a href="/footage-levels/" style="color:var(--sun)">footage ladder</a>: dead air to banger. The first real graded run happened 2026-08-09: all 69 events of the Dec 30 session ranked by motion score within the session and banded provisionally (4 bangers, 10 strong, 27 keepers, 28 ambient). Provisional means exactly that: the bands are a percentile stand-in until the real level signatures calibrate, and every marker says so.</p>
+    <div class="fs">Future: signature-based levels (interaction bursts, hover, size diversity), accuracy tracked here per camera setup.</div>
   </div></div>
 
   <div class="step"><div class="num">6</div><div>
-    <h3>The graded timeline returns <span class="chip c-built">round trip proven</span></h3>
+    <h3>The graded timeline returns <span class="chip c-live">first real delivery</span></h3>
     <p>A new sequence appears in Premiere: the untouched original on track 1, and every graded moment lifted to the track matching its level, V2 through V5, with markers and a thumbnail contact sheet. The original is never edited by software; the worst any bug can do is make a bad duplicate.</p>
-    <div class="fs">Proven 2026-08-09 on the real Premiere: a generated selects sequence (three test clips, three fake events, one spanning an edit) imported clean, every select landed frame-exact with its audio in sync, markers named and placed, and re-exporting the original proved it untouched. The generator clones Premiere's own file structures, so its quirks ride along for free.</div>
+    <div class="fs">Delivered for real 2026-08-09, hours after the round-trip proof: the full Dec 30 session imported into Premiere as a five-track graded sequence (55 clips on V1, 69 leveled spans on V2 through V5, stereo audio paired per level, 138 leveled markers), and re-exporting it verified every track frame-exact. Zoomed out, the timeline reads as a quality histogram: tall stack means good stretch.</div>
   </div></div>
 
   <div class="step"><div class="num">7</div><div>
     <h3>Review = training <span class="chip c-design">designed</span></h3>
     <p>Reviewing means watching the top tracks and dragging anything misgraded up or down a track. The system re-reads the reviewed timeline and adjusts its thresholds. Ordinary editing is the calibration; there is no separate feedback chore.</p>
-    <div class="fs">Future: each review measurably sharpens the next night's grades.</div>
+    <div class="fs">The first real training material now exists: every clip dragged to a different track in the Dec 30 graded sequence becomes calibration data the moment it is re-ingested. Future: each review measurably sharpens the next night's grades.</div>
   </div></div>
 
   <div class="step"><div class="num">8</div><div>
@@ -147,6 +147,7 @@ details .in { padding: 0 18px 16px; }
   <details>
     <summary>Changelog</summary>
     <div class="in">
+      <p class="muted">v1.1.0 (2026-08-09, 12:15 PM): The first REAL graded sequence exists. Stages 3, 5, and 6 all go live at once: the pipeline assembled the whole Dec 30 session timeline from its folder (55 clips, no hand assembly), graded all 69 detected events provisionally by within-session motion-score percentiles (4 bangers, 10 strong, 27 keepers, 28 ambient), and delivered a five-track sequence into a fresh Premiere project with stereo audio paired per level and 138 leveled markers. Re-exporting the imported sequence verified every track frame-exact. One honest asterisk: Premiere 26.2.2 turns out to ship no built-in script surface (no Scripts menu), so the green/red marker color pass waits for a script host; markers carry their level in the name meanwhile. Review of this sequence is now the first real training data for the grading loop.</p>
       <p class="muted">v1.0.5 (2026-08-09, 10:50 AM): Stage 6 chip goes green: the Phase 0 round trip ran on the real Premiere and passed every check. Three test clips built into a 20%-speed timeline by the session driving Premiere itself, exported, parsed, and a selects sequence generated back by cloning Premiere's own structures: clean import, frame-exact selects (including one spanning an edit), stereo audio in sync, named markers, original untouched. Two dialect traps found and fixed in the generator: trims must land on the 5-frame conform grid or Premiere shifts them, and stereo span audio must ship as an exploded track pair or it doubles.</p>
       <p class="muted">v1.0.4 (2026-08-09, 9:45 AM): "Overnight" retired from the vocabulary (runs happen whenever; they are unmonitored runs). Stage 4 renamed accordingly and now reads "running through the archive": the full-2024 batch crank started this morning.</p>
       <p class="muted">v1.0.3 (2026-08-09, 9:20 AM): Contact Sheets went live as their own section: every analyzed session publishes its proof sheet to /contact-sheets/, named by its archive folder, indexed newest-first. Stage 4 links there; all site footers carry it.</p>
