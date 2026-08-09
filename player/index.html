@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Slow Motion Birds: Player</title>
+<meta name="description" content="Pick a bird playlist, hit Release the Birds, cast it to the TV.">
+<meta property="og:title" content="Slow Motion Birds: Player">
+<meta property="og:description" content="An ambient bird-video player for your TV. Cast the tab. Leave it running.">
+<meta property="og:image" content="https://slowmotionbirds.com/player/og.png">
+<meta property="og:url" content="https://slowmotionbirds.com/player/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Slow Motion Birds: Player">
+<meta name="twitter:description" content="An ambient bird-video player for your TV. Cast the tab. Leave it running.">
+<meta name="twitter:image" content="https://slowmotionbirds.com/player/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-size='22'>🐦</text></svg>">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --pitch: #0C0E10;
+  --linen: #F0EBE0;
+  --dust: #9A917E;
+  --sun: #E8A13A;
+  --line: #23262B;
+}
+html { background: var(--pitch); }
+body { font-family: 'DM Sans', sans-serif; font-weight: 300; color: var(--linen); background: var(--pitch); line-height: 1.6; min-height: 100svh; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+.mono { font-family: 'DM Mono', monospace; }
+
+/* ===== PICKER SCREEN ===== */
+#picker { max-width: 760px; margin: 0 auto; padding: 48px 24px 40px; }
+.p-kicker { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dust); margin-bottom: 10px; }
+.p-kicker a { color: var(--sun); }
+.p-kicker a:hover { text-decoration: underline; }
+h1.p-title { font-family: 'Big Shoulders Display', sans-serif; font-weight: 900; font-size: clamp(40px, 9vw, 78px); line-height: 0.88; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 8px; }
+h1.p-title .sun { color: var(--sun); }
+.p-sub { color: #C9C2B2; font-size: 14px; max-width: 480px; margin-bottom: 34px; }
+
+.p-section { margin-bottom: 30px; }
+.p-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dust); margin-bottom: 12px; }
+
+.opt-list { display: flex; flex-direction: column; gap: 8px; }
+.opt {
+  display: flex; align-items: center; gap: 12px;
+  border: 1px solid var(--line); border-radius: 3px; padding: 13px 16px;
+  min-height: 44px; transition: border-color 0.15s, background 0.15s;
+}
+.opt:has(input:checked) { border-color: var(--sun); background: rgba(232,161,58,0.06); }
+.opt.disabled { opacity: 0.45; }
+.opt input[type="radio"] { accent-color: var(--sun); width: 16px; height: 16px; flex: none; }
+.opt-body { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.opt-name { font-size: 14px; color: var(--linen); }
+.opt-note { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dust); }
+label.opt { cursor: pointer; }
+label.opt.disabled { cursor: not-allowed; }
+
+.p-toggles { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 34px; }
+.toggle { display: flex; align-items: center; gap: 9px; min-height: 44px; }
+.toggle input[type="checkbox"] { accent-color: var(--sun); width: 16px; height: 16px; }
+.toggle span { font-size: 13px; color: #C9C2B2; }
+.toggle.is-disabled { opacity: 0.4; }
+
+.release-btn {
+  display: block; width: 100%; border: 0; border-radius: 3px;
+  background: var(--sun); color: var(--pitch);
+  font-family: 'Big Shoulders Display', sans-serif; font-weight: 900;
+  font-size: clamp(22px, 4vw, 30px); text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 22px; min-height: 64px; transition: background 0.15s, transform 0.1s;
+}
+.release-btn:hover { background: var(--linen); }
+.release-btn:active { transform: scale(0.99); }
+
+.p-hint { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.05em; color: var(--dust); text-align: center; margin-top: 16px; }
+.p-back { display: block; text-align: center; margin-top: 22px; font-size: 12px; color: var(--dust); }
+.p-back:hover { color: var(--sun); }
+
+.p-stamp { margin-top: 44px; padding-top: 20px; border-top: 0.5px solid var(--line); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: var(--dust); text-align: center; }
+.p-stamp summary { cursor: pointer; list-style: none; }
+.p-stamp summary::-webkit-details-marker { display: none; }
+.p-stamp summary:hover { color: var(--sun); }
+.changelog { margin-top: 10px; text-align: left; max-width: 420px; margin-left: auto; margin-right: auto; }
+.changelog li { margin-bottom: 6px; color: var(--dust); }
+
+.p-bottom { margin-top: 40px; padding-top: 26px; border-top: 0.5px solid var(--line); text-align: center; }
+.p-bottom .snark { font-size: 13px; color: var(--dust); margin-bottom: 10px; }
+.p-bottom .built { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dust); }
+.p-bottom .built a { color: var(--sun); }
+.p-bottom .built a:hover { text-decoration: underline; }
+
+/* ===== STAGE (fullscreen playback) ===== */
+#stage {
+  display: none; position: fixed; inset: 0; background: #000; z-index: 100;
+}
+#stage.active { display: block; }
+.video-wrap { position: absolute; inset: 0; overflow: hidden; background: #000; }
+.video-wrap iframe {
+  position: absolute; top: 50%; left: 50%;
+  width: max(100vw, 177.78vh); height: max(100vh, 56.25vw);
+  transform: translate(-50%, -50%); border: 0; pointer-events: none;
+}
+.overlay { position: absolute; inset: 0; background: #000; opacity: 1; transition: opacity 0.4s ease; pointer-events: none; z-index: 2; }
+.overlay.hidden { opacity: 0; }
+
+.toast {
+  position: absolute; left: 50%; bottom: 90px; transform: translateX(-50%);
+  font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--linen); background: rgba(12,14,16,0.65); border: 0.5px solid var(--line);
+  padding: 10px 18px; border-radius: 2px; opacity: 0; transition: opacity 0.5s ease; z-index: 3; pointer-events: none;
+  max-width: 80vw; text-align: center;
+}
+.toast.show { opacity: 1; }
+
+.bar {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 4;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 18px; background: linear-gradient(0deg, rgba(0,0,0,0.75), transparent);
+  opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
+}
+.bar.show { opacity: 1; pointer-events: auto; }
+.bar button {
+  min-width: 44px; min-height: 44px; border: 1px solid rgba(240,235,224,0.35); border-radius: 3px;
+  background: rgba(12,14,16,0.55); color: var(--linen); font-size: 16px; padding: 0 16px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font-family: 'DM Mono', monospace;
+}
+.bar button:hover { border-color: var(--sun); color: var(--sun); }
+.bar button[disabled] { opacity: 0.4; cursor: not-allowed; }
+.bar button[disabled]:hover { border-color: rgba(240,235,224,0.35); color: var(--linen); }
+.bar .lbl { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+@media (max-width: 560px) { #picker { padding: 36px 18px 30px; } }
+</style>
+</head>
+<body>
+
+<div id="picker">
+  <div class="p-kicker"><a href="/">slowmotionbirds.com</a> &middot; player (beta)</div>
+  <h1 class="p-title">Release the<br><span class="sun">Birds.</span></h1>
+  <p class="p-sub">An ambient loop for a TV or a quiet room. Pick a bird playlist, pick music if it's ready, hit go.</p>
+
+  <div class="p-section">
+    <div class="p-label">Bird playlist</div>
+    <div class="opt-list" id="video-list"></div>
+  </div>
+
+  <div class="p-section">
+    <div class="p-label">Music</div>
+    <div class="opt-list" id="music-list"></div>
+  </div>
+
+  <div class="p-toggles">
+    <label class="toggle">
+      <input type="checkbox" id="shuffle-video">
+      <span>Shuffle bird videos</span>
+    </label>
+    <label class="toggle" id="shuffle-music-wrap">
+      <input type="checkbox" id="shuffle-music">
+      <span>Shuffle music</span>
+    </label>
+  </div>
+
+  <button class="release-btn" id="release-btn">Release the Birds</button>
+  <div class="p-hint">On a TV: cast this tab from Chrome (&#8942; menu &rarr; Cast).</div>
+  <a class="p-back" href="/">&larr; Back to slowmotionbirds.com</a>
+
+  <details class="p-stamp">
+    <summary>Updated Sun / 2026-08-09 / 4:32 PM CT &middot; v1.0.1 &middot; changelog</summary>
+    <ul class="changelog mono">
+      <li>1.0.1 (2026-08-09): Exit and Esc now leave the player even when the browser denies or lacks fullscreen, instead of waiting on a fullscreenchange event that would never fire.</li>
+      <li>1.0.0 (2026-08-09): First ship. Two bird playlists (All birds, Snow days), independent video/music queues, shuffle without immediate repeats, fade transitions, idle-fade controls, Chrome tab-cast. Music lane ships with "No music" only; the full library is mirrored and pending a license verdict.</li>
+    </ul>
+  </details>
+
+  <div class="p-bottom">
+    <div class="snark">The birds don't know they're background noise. Let's keep it that way.</div>
+    <div class="built">Built by <a href="https://colton.land" target="_blank" rel="noopener">Colton Mulligan</a></div>
+  </div>
+</div>
+
+<div id="stage">
+  <div class="video-wrap" id="video-wrap"></div>
+  <div class="overlay" id="overlay"></div>
+  <div class="toast" id="toast"></div>
+  <div class="bar" id="bar">
+    <button id="btn-playpause" aria-label="Pause">&#10073;&#10073; <span class="lbl">Pause</span></button>
+    <button id="btn-next" aria-label="Next video">&#9197; <span class="lbl">Next</span></button>
+    <button id="btn-music" disabled title="Pending license check">&#9834; <span class="lbl">Music: pending</span></button>
+    <button id="btn-exit" aria-label="Exit">&#10005; <span class="lbl">Exit</span></button>
+  </div>
+</div>
+
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var picker = document.getElementById('picker');
+  var stage = document.getElementById('stage');
+  var videoWrap = document.getElementById('video-wrap');
+  var overlay = document.getElementById('overlay');
+  var toast = document.getElementById('toast');
+  var bar = document.getElementById('bar');
+  var audio = new Audio();
+  audio.preload = 'none';
+
+  var data = null;
+  var selectedVideoPlaylistId = null;
+  var selectedMusicPlaylistId = 'none';
+
+  var videoQueue = [];
+  var videoIndex = 0;
+  var lastVideoId = null;
+  var vimeoPlayer = null;
+
+  var musicQueue = [];
+  var musicIndex = 0;
+  var lastTrackFile = null;
+
+  var idleTimer = null;
+  var toastTimer = null;
+
+  fetch('playlists.json').then(function (r) { return r.json(); }).then(function (json) {
+    data = json;
+    renderVideoOptions();
+    renderMusicOptions();
+  }).catch(function (err) {
+    console.error('Could not load playlists.json', err);
+  });
+
+  function el(tag, cls, html) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  }
+
+  function renderVideoOptions() {
+    var list = document.getElementById('video-list');
+    list.innerHTML = '';
+    data.video_playlists.forEach(function (pl, i) {
+      var enabledCount = pl.items.filter(function (it) { return it.enabled !== false; }).length;
+      var label = el('label', 'opt' + (enabledCount === 0 ? ' disabled' : ''));
+      var input = document.createElement('input');
+      input.type = 'radio'; input.name = 'video-playlist'; input.value = pl.id;
+      if (enabledCount === 0) input.disabled = true;
+      if (i === 0 && enabledCount > 0) { input.checked = true; selectedVideoPlaylistId = pl.id; }
+      input.addEventListener('change', function () { selectedVideoPlaylistId = pl.id; });
+      var body = el('div', 'opt-body', '<span class="opt-name">' + pl.name + '</span><span class="opt-note">' + enabledCount + ' film' + (enabledCount === 1 ? '' : 's') + '</span>');
+      label.appendChild(input); label.appendChild(body);
+      list.appendChild(label);
+    });
+  }
+
+  function renderMusicOptions() {
+    var list = document.getElementById('music-list');
+    list.innerHTML = '';
+    data.music_playlists.forEach(function (pl, i) {
+      var hasTracks = pl.tracks && pl.tracks.filter(function (t) { return t.enabled !== false; }).length > 0;
+      var isUsable = pl.enabled !== false && (pl.id === 'none' || hasTracks);
+      var label = el('label', 'opt' + (isUsable ? '' : ' disabled'));
+      var input = document.createElement('input');
+      input.type = 'radio'; input.name = 'music-playlist'; input.value = pl.id;
+      if (!isUsable) input.disabled = true;
+      if (isUsable && pl.id === 'none') { input.checked = true; selectedMusicPlaylistId = pl.id; }
+      input.addEventListener('change', function () { selectedMusicPlaylistId = pl.id; updateShuffleMusicState(); });
+      var note = pl.id === 'none' ? 'silent, video only' : (isUsable ? (pl.tracks.length + ' track' + (pl.tracks.length === 1 ? '' : 's')) : (pl.note || 'pending license check'));
+      var body = el('div', 'opt-body', '<span class="opt-name">' + pl.name + '</span><span class="opt-note">' + note + '</span>');
+      label.appendChild(input); label.appendChild(body);
+      list.appendChild(label);
+    });
+    updateShuffleMusicState();
+  }
+
+  function updateShuffleMusicState() {
+    var wrap = document.getElementById('shuffle-music-wrap');
+    var cb = document.getElementById('shuffle-music');
+    var pl = (data.music_playlists || []).find(function (p) { return p.id === selectedMusicPlaylistId; });
+    var usable = pl && pl.tracks && pl.tracks.length > 1;
+    wrap.classList.toggle('is-disabled', !usable);
+    cb.disabled = !usable;
+  }
+
+  function shuffle(arr, avoidFirstId, idKey) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    if (avoidFirstId && a.length > 1 && a[0][idKey] === avoidFirstId) {
+      var swapWith = 1 + Math.floor(Math.random() * (a.length - 1));
+      var t = a[0]; a[0] = a[swapWith]; a[swapWith] = t;
+    }
+    return a;
+  }
+
+  function buildSrc(vimeoId) {
+    return 'https://player.vimeo.com/video/' + vimeoId +
+      '?autoplay=1&muted=1&loop=0&autopause=0&title=0&byline=0&portrait=0&dnt=1';
+  }
+
+  function showToast(text) {
+    toast.textContent = text;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 2600);
+  }
+
+  function fadeOverlay(hide) {
+    overlay.classList.toggle('hidden', hide);
+  }
+
+  function currentVideoItem() { return videoQueue[videoIndex]; }
+
+  function loadVideoAt(index, opts) {
+    opts = opts || {};
+    var item = videoQueue[index];
+    if (!item) return;
+    fadeOverlay(false);
+    var proceed = function () {
+      vimeoPlayer.loadVideo(item.vimeo_id).then(function () {
+        lastVideoId = item.vimeo_id;
+        vimeoPlayer.setMuted(true);
+        vimeoPlayer.play().catch(function (e) { console.warn('play() rejected', e); });
+        showToast(item.title);
+      }).catch(function (err) {
+        console.error('Vimeo loadVideo failed for', item.vimeo_id, err);
+        advanceVideo();
+      });
+    };
+    if (opts.immediate) { proceed(); } else { setTimeout(proceed, 400); }
+  }
+
+  function advanceVideo() {
+    videoIndex++;
+    if (videoIndex >= videoQueue.length) {
+      videoIndex = 0;
+      if (document.getElementById('shuffle-video').checked) {
+        videoQueue = shuffle(videoQueue, lastVideoId, 'vimeo_id');
+      }
+    }
+    loadVideoAt(videoIndex);
+  }
+
+  function handleVideoEnded() { advanceVideo(); }
+  function handleVideoError(e) {
+    console.error('Vimeo player error', e);
+    advanceVideo();
+  }
+  function handleVideoLoaded() { fadeOverlay(true); }
+
+  function buildMusicQueueFromSelection() {
+    var pl = (data.music_playlists || []).find(function (p) { return p.id === selectedMusicPlaylistId; });
+    if (!pl || !pl.tracks || !pl.tracks.length) return [];
+    var tracks = pl.tracks.filter(function (t) { return t.enabled !== false; });
+    if (document.getElementById('shuffle-music').checked) tracks = shuffle(tracks, null, 'file');
+    return tracks;
+  }
+
+  function loadTrackAt(index) {
+    var t = musicQueue[index];
+    if (!t) return;
+    audio.src = t.file;
+    audio.volume = 1;
+    if (typeof t.gain_db === 'number') {
+      audio.volume = Math.max(0, Math.min(1, Math.pow(10, t.gain_db / 20)));
+    }
+    audio.play().catch(function (e) { console.warn('audio play() rejected', e); });
+    lastTrackFile = t.file;
+  }
+
+  function advanceMusic() {
+    musicIndex++;
+    if (musicIndex >= musicQueue.length) {
+      musicIndex = 0;
+      if (document.getElementById('shuffle-music').checked) {
+        musicQueue = shuffle(musicQueue, lastTrackFile, 'file');
+      }
+    }
+    loadTrackAt(musicIndex);
+  }
+
+  audio.addEventListener('ended', advanceMusic);
+  audio.addEventListener('error', function (e) {
+    console.error('Audio track failed to load', lastTrackFile, e);
+    advanceMusic();
+  });
+
+  function requestFS(node) {
+    var fn = node.requestFullscreen || node.webkitRequestFullscreen || node.mozRequestFullScreen || node.msRequestFullscreen;
+    if (fn) { try { fn.call(node); } catch (e) { console.warn('requestFullscreen failed', e); } }
+  }
+  function exitFS() {
+    var fn = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+    if (fn) { try { fn.call(document); } catch (e) { console.warn('exitFullscreen failed', e); } }
+  }
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+  }
+
+  function showBar() {
+    bar.classList.add('show');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function () { bar.classList.remove('show'); }, 4000);
+  }
+
+  ['pointermove', 'keydown', 'click', 'touchstart'].forEach(function (evt) {
+    stage.addEventListener(evt, showBar, { passive: true });
+  });
+
+  document.getElementById('btn-playpause').addEventListener('click', function (e) {
+    e.stopPropagation();
+    var btn = e.currentTarget;
+    if (!vimeoPlayer) return;
+    vimeoPlayer.getPaused().then(function (paused) {
+      if (paused) {
+        vimeoPlayer.play();
+        if (musicQueue.length) audio.play().catch(function () {});
+        btn.innerHTML = '&#10073;&#10073; <span class="lbl">Pause</span>';
+      } else {
+        vimeoPlayer.pause();
+        if (musicQueue.length) audio.pause();
+        btn.innerHTML = '&#9654; <span class="lbl">Play</span>';
+      }
+    });
+  });
+
+  document.getElementById('btn-next').addEventListener('click', function (e) {
+    e.stopPropagation();
+    advanceVideo();
+  });
+
+  document.getElementById('btn-exit').addEventListener('click', function (e) {
+    e.stopPropagation();
+    leaveStage();
+  });
+
+  function leaveStage() {
+    // Fullscreen may have been denied or unsupported; don't strand the user
+    // waiting on a fullscreenchange event that will never fire.
+    if (isFullscreen()) { exitFS(); } else { teardownStage(); }
+  }
+
+  function teardownStage() {
+    stage.classList.remove('active');
+    if (vimeoPlayer) {
+      try { vimeoPlayer.off('ended'); vimeoPlayer.off('error'); vimeoPlayer.off('loaded'); vimeoPlayer.unload(); } catch (e) {}
+      vimeoPlayer = null;
+    }
+    videoWrap.innerHTML = '';
+    audio.pause();
+    audio.src = '';
+    clearTimeout(idleTimer);
+    clearTimeout(toastTimer);
+    bar.classList.remove('show');
+    toast.classList.remove('show');
+    picker.style.display = '';
+  }
+
+  document.addEventListener('fullscreenchange', onFsChange);
+  document.addEventListener('webkitfullscreenchange', onFsChange);
+  document.addEventListener('mozfullscreenchange', onFsChange);
+  document.addEventListener('MSFullscreenChange', onFsChange);
+  function onFsChange() {
+    if (!isFullscreen() && stage.classList.contains('active')) {
+      teardownStage();
+    }
+  }
+
+  document.getElementById('release-btn').addEventListener('click', function () {
+    if (!data) return;
+    var pl = data.video_playlists.find(function (p) { return p.id === selectedVideoPlaylistId; });
+    if (!pl) return;
+    var items = pl.items.filter(function (it) { return it.enabled !== false; });
+    if (!items.length) return;
+    if (document.getElementById('shuffle-video').checked) items = shuffle(items, null, 'vimeo_id');
+    videoQueue = items;
+    videoIndex = 0;
+
+    musicQueue = buildMusicQueueFromSelection();
+    musicIndex = 0;
+
+    // Stage up first, fullscreen request stays inside this click's gesture.
+    picker.style.display = 'none';
+    stage.classList.add('active');
+    requestFS(stage);
+    fadeOverlay(false);
+
+    var iframe = document.createElement('iframe');
+    iframe.setAttribute('allow', 'autoplay; fullscreen');
+    iframe.src = buildSrc(videoQueue[0].vimeo_id);
+    videoWrap.appendChild(iframe);
+    lastVideoId = videoQueue[0].vimeo_id;
+
+    vimeoPlayer = new Vimeo.Player(iframe);
+    vimeoPlayer.on('ended', handleVideoEnded);
+    vimeoPlayer.on('error', handleVideoError);
+    vimeoPlayer.on('loaded', handleVideoLoaded);
+    vimeoPlayer.setMuted(true).catch(function () {});
+    vimeoPlayer.getVideoTitle().then(showToast).catch(function () { showToast(videoQueue[0].title); });
+
+    if (musicQueue.length) { loadTrackAt(0); }
+
+    showBar();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && stage.classList.contains('active')) leaveStage();
+  });
+})();
+</script>
+</body>
+</html>

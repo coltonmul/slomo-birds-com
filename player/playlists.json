@@ -1,0 +1,38 @@
+{
+  "video_playlists": [
+    {
+      "id": "all-birds",
+      "name": "All birds",
+      "items": [
+        { "vimeo_id": "1046042489", "title": "Barred Owl Visits", "enabled": true },
+        { "vimeo_id": "1050417825", "title": "Snow Birds & Lo-Fi Beats, Vol. 1", "enabled": true },
+        { "vimeo_id": "1050607021", "title": "House Finch Feeder Fight Fest", "enabled": true },
+        { "vimeo_id": "911920183", "title": "Backyard Snow Birds", "enabled": true },
+        { "vimeo_id": "802513702", "title": "Bird Clips: Selects", "enabled": true }
+      ]
+    },
+    {
+      "id": "snow-days",
+      "name": "Snow days",
+      "items": [
+        { "vimeo_id": "1050417825", "title": "Snow Birds & Lo-Fi Beats, Vol. 1", "enabled": true },
+        { "vimeo_id": "911920183", "title": "Backyard Snow Birds", "enabled": true }
+      ]
+    }
+  ],
+  "music_playlists": [
+    {
+      "id": "none",
+      "name": "No music",
+      "enabled": true,
+      "tracks": []
+    },
+    {
+      "id": "musicbed-pending",
+      "name": "Musicbed catalog",
+      "enabled": false,
+      "note": "pending license check",
+      "tracks": []
+    }
+  ]
+}
