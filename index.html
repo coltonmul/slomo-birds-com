@@ -176,17 +176,22 @@ h1 .sun { color: var(--sun); }
      behind the headline, in place, with no page reload: the poster frame lifts
      over the player while the new clip loads, then fades off once Vimeo reports
      it actually playing. The choice is remembered on the visitor's own device.
-     To add or change a shot, edit the SHOTS list below. tailTrim restarts a clip
-     that many seconds early, for footage with a long tail (0 = play it all). -->
+     To add or change a shot, edit the SHOTS list below. Each shot carries the
+     loop window that plays behind the headline. -->
 <script src="https://player.vimeo.com/api/player.js"></script>
 <script>
 (function () {
   // First entry is the default shot. It has to match the iframe src and the
   // .hero-still poster in the markup above, or the page opens on a mismatch.
   var SHOTS = [
-    { id: '1222801626', name: 'Wide angle', button: 'Close up instead',   tailTrim: 0,
+    // loopStart / loopEnd are seconds. loopEnd null plays the clip out.
+    // The wide file is 91s long, far too long to sit behind a headline, so it
+    // loops its opening stretch. Move these two numbers to change the window.
+    { id: '1222801626', name: 'Wide angle', button: 'Close up instead',
+      loopStart: 0, loopEnd: 24,
       still: 'https://i.vimeocdn.com/video/2195850370-f0e530f4bb4dff86bb00bfd7570368113b43e45c7f9ee35e07d45885b2530831-d_1920x1080?region=us' },
-    { id: '1222796771', name: 'Close up',   button: 'Wide angle instead', tailTrim: 0,
+    { id: '1222796771', name: 'Close up',   button: 'Wide angle instead',
+      loopStart: 0, loopEnd: null,
       still: 'https://i.vimeocdn.com/video/2195844308-484c7d9df63fad5db71bd845502310f8bd1de8434ea51221a3855dc95f752ff0-d_1920x1080?region=us' }
   ];
   var STORE_KEY = 'smb-hero-shot';
@@ -223,15 +228,19 @@ h1 .sun { color: var(--sun); }
     button.disabled = false;
   }
 
-  // Restart early when a clip's tail runs long.
-  function armTrim(p, trim) {
-    if (!trim) return;
-    var loopAt = null, seeking = false;
-    p.getDuration().then(function (d) { loopAt = Math.max(d - trim, 1); }).catch(function () {});
-    p.on('timeupdate', function (data) {
-      if (loopAt === null || seeking || data.seconds < loopAt) return;
+  // Loop only the useful stretch of a clip. Vimeo's own loop=1 always plays the
+  // whole file, which is wrong for long footage, so drive the restart here.
+  function armLoopWindow(player, shot) {
+    var start = shot.loopStart || 0;
+    var end = shot.loopEnd;
+    if (!start && end === null) return;        // nothing to trim, let loop=1 run it
+    var seeking = false;
+    function released() { seeking = false; }
+    if (start) player.setCurrentTime(start).catch(function () {});
+    player.on('timeupdate', function (data) {
+      if (seeking || end === null || data.seconds < end) return;
       seeking = true;
-      p.setCurrentTime(0).then(function () { seeking = false; }, function () { seeking = false; });
+      player.setCurrentTime(start).then(released, released);
     });
   }
 
@@ -247,7 +256,7 @@ h1 .sun { color: var(--sun); }
     frame.src = 'https://player.vimeo.com/video/' + shot.id + PARAMS;
     player = new Vimeo.Player(frame);
     player.on('playing', uncover);
-    armTrim(player, shot.tailTrim);
+    armLoopWindow(player, shot);
     coverTimer = setTimeout(uncover, 6000);   // never leave the poster stuck over a working player
   }
 
@@ -263,7 +272,7 @@ h1 .sun { color: var(--sun); }
 
   var startAt = remembered();
   if (startAt !== 0) { show(startAt); }
-  else { label(0); armTrim(player = new Vimeo.Player(frame), SHOTS[0].tailTrim); }
+  else { label(0); armLoopWindow(player = new Vimeo.Player(frame), SHOTS[0]); }
 })();
 </script>
 
