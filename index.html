@@ -80,7 +80,7 @@ h1 .sun { color: var(--sun); }
 <header class="hero">
   <div class="hero-still" aria-hidden="true"></div>
   <div class="hero-video" aria-hidden="true">
-    <iframe src="https://player.vimeo.com/video/1222796771?background=1&autoplay=1&muted=1&loop=1&autopause=0&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen" title=""></iframe>
+    <iframe id="hero-video-frame" src="https://player.vimeo.com/video/1222796771?background=1&autoplay=1&muted=1&loop=1&autopause=0&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen" title=""></iframe>
   </div>
   <div class="hero-shade"></div>
   <div class="hero-content">
@@ -155,6 +155,37 @@ h1 .sun { color: var(--sun); }
     &nbsp;&middot;&nbsp; slowmotionbirds.com &nbsp;&middot;&nbsp; &copy; 2026
   </div>
 </footer>
+
+
+<!-- HERO LOOP TRIM: the clip's tail runs long, so restart it TAIL_TRIM seconds
+     before the real end instead of playing all the way out. Change TAIL_TRIM
+     below to tune it (seconds). If this script fails to load, the iframe's own
+     loop=1 still runs the full clip, so the hero never goes blank. -->
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script>
+(function () {
+  var TAIL_TRIM = 5;           // seconds cut off the end of every loop
+  var frame = document.getElementById('hero-video-frame');
+  if (!frame || !window.Vimeo) return;
+
+  var player = new Vimeo.Player(frame);
+  var loopAt = null;
+  var seeking = false;
+
+  player.getDuration().then(function (duration) {
+    loopAt = Math.max(duration - TAIL_TRIM, 1);
+  }).catch(function () { /* leave native loop=1 in charge */ });
+
+  player.on('timeupdate', function (data) {
+    if (loopAt === null || seeking || data.seconds < loopAt) return;
+    seeking = true;
+    player.setCurrentTime(0).then(
+      function () { seeking = false; },
+      function () { seeking = false; }
+    );
+  });
+})();
+</script>
 
 </body>
 </html>
