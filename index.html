@@ -29,7 +29,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ===== FULL-BLEED VIDEO HERO ===== */
 .hero { position: relative; height: 100svh; min-height: 540px; overflow: hidden; display: flex; align-items: flex-end; }
-.hero-still { position: absolute; inset: -6%; background: url('https://i.vimeocdn.com/video/2195844308-484c7d9df63fad5db71bd845502310f8bd1de8434ea51221a3855dc95f752ff0-d_1920x1080?region=us') center/cover no-repeat; animation: kenburns 26s ease-in-out infinite alternate; }
+.hero-still { position: absolute; inset: -6%; background: url('https://i.vimeocdn.com/video/2195850370-f0e530f4bb4dff86bb00bfd7570368113b43e45c7f9ee35e07d45885b2530831-d_1920x1080?region=us') center/cover no-repeat; animation: kenburns 26s ease-in-out infinite alternate; }
 /* while a new shot loads, the poster frame lifts above the player so the swap never flashes black */
 .hero-still.covering { z-index: 2; }
 .hero-still.fading { z-index: 2; opacity: 0; transition: opacity 0.6s ease; }
@@ -88,14 +88,15 @@ h1 .sun { color: var(--sun); }
 </head>
 <body>
 
-<!-- HERO: full-bleed slow motion ruby-throated hummingbird (Vimeo 1222796771), text floats over the footage -->
+<!-- HERO: full-bleed slow motion ruby-throated hummingbird, wide shot by default (Vimeo 1222801626),
+     close up on the toggle (1222796771). Text floats over the footage. -->
 <header class="hero">
   <div class="hero-still" aria-hidden="true"></div>
   <div class="hero-video" aria-hidden="true">
-    <iframe id="hero-video-frame" src="https://player.vimeo.com/video/1222796771?background=1&autoplay=1&muted=1&loop=1&autopause=0&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen" title=""></iframe>
+    <iframe id="hero-video-frame" src="https://player.vimeo.com/video/1222801626?background=1&autoplay=1&muted=1&loop=1&autopause=0&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen" title=""></iframe>
   </div>
   <div class="hero-shade"></div>
-  <button class="hero-toggle" id="hero-toggle" type="button">Wide angle instead</button>
+  <button class="hero-toggle" id="hero-toggle" type="button">Close up instead</button>
   <div class="hero-content">
     <div class="annot">240 frames per second &middot; Backyard, Nashville</div>
     <h1>Slow Motion<br><span class="sun">Birds.</span></h1>
@@ -180,11 +181,13 @@ h1 .sun { color: var(--sun); }
 <script src="https://player.vimeo.com/api/player.js"></script>
 <script>
 (function () {
+  // First entry is the default shot. It has to match the iframe src and the
+  // .hero-still poster in the markup above, or the page opens on a mismatch.
   var SHOTS = [
-    { id: '1222796771', name: 'Close up',   button: 'Wide angle instead', tailTrim: 0,
-      still: 'https://i.vimeocdn.com/video/2195844308-484c7d9df63fad5db71bd845502310f8bd1de8434ea51221a3855dc95f752ff0-d_1920x1080?region=us' },
     { id: '1222801626', name: 'Wide angle', button: 'Close up instead',   tailTrim: 0,
-      still: 'https://i.vimeocdn.com/video/2195850370-f0e530f4bb4dff86bb00bfd7570368113b43e45c7f9ee35e07d45885b2530831-d_1920x1080?region=us' }
+      still: 'https://i.vimeocdn.com/video/2195850370-f0e530f4bb4dff86bb00bfd7570368113b43e45c7f9ee35e07d45885b2530831-d_1920x1080?region=us' },
+    { id: '1222796771', name: 'Close up',   button: 'Wide angle instead', tailTrim: 0,
+      still: 'https://i.vimeocdn.com/video/2195844308-484c7d9df63fad5db71bd845502310f8bd1de8434ea51221a3855dc95f752ff0-d_1920x1080?region=us' }
   ];
   var STORE_KEY = 'smb-hero-shot';
   var PARAMS = '?background=1&autoplay=1&muted=1&loop=1&autopause=0&title=0&byline=0&portrait=0&dnt=1';
