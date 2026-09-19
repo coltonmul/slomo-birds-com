@@ -33,6 +33,8 @@ p { max-width: 660px; margin: 0 0 12px; font-size:14.5px; }
 .panel { border:0.5px solid var(--line); background:var(--panel); border-radius:4px; padding:20px 22px; margin:18px 0; }
 ul { margin: 0 0 12px 18px; }
 li { font-size:14.5px; margin-bottom:6px; }
+.site-note { border-top:0.5px solid var(--line); margin-top:48px; padding-top:8px; }
+.site-note a { color:var(--sun); text-decoration:underline; text-underline-offset:3px; }
 details { border-top:0.5px solid var(--line); margin-top:40px; padding-top:16px; }
 summary { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--dust); cursor:pointer; }
 details .in { padding-top:12px; }
@@ -46,7 +48,7 @@ details .in { padding-top:12px; }
   <p class="annot"><a href="/">&larr; slowmotionbirds.com</a></p>
   <h1>Privacy<span class="sun">.</span></h1>
   <p class="lede">The Slow Motion Birds app for Apple TV does not collect any data about you. There is nothing to opt out of, because there is nothing being gathered.</p>
-  <p class="stamp">v1.0.0 &middot; Updated Mon / 2026-09-07 / 3:29 PM CT</p>
+  <p class="stamp">v1.1.0 &middot; Updated Sat / 2026-09-19 / 9:51 AM CT</p>
 
   <div class="panel">
     <p>No accounts. No sign in. No analytics. No advertising and no advertising identifiers. No tracking, and no data shared with anyone. The app makes no network requests at all: every clip is bundled inside the app itself, so once it is installed it works with the Apple TV disconnected from the internet.</p>
@@ -67,9 +69,20 @@ details .in { padding-top:12px; }
   <h2>Changes</h2>
   <p class="muted">If a future version of the app ever does collect something, this page changes first and the version stamp above moves with it.</p>
 
+  <!-- ABOUT THIS WEBSITE. Deliberately separate from everything above, which is about the
+       Apple TV app and is the page the App Store listing points at. Nothing above this line
+       changed in v1.1.0. The visitor counter stays OFF this page: do not add it here. -->
+  <section class="site-note" aria-labelledby="site-note-h">
+    <h2 id="site-note-h">About this website</h2>
+    <p>Everything above is about the app. This part is about the website you are reading it on, slowmotionbirds.com, which is a separate thing from the app.</p>
+    <p>The website counts page views with a cookie-free visitor counter (Cloudflare Web Analytics). It sets no cookies, does not fingerprint anyone, and counts visits, not people. That counter is deliberately left off this one page. Like the rest of the site, this page does load its typefaces from Google Fonts, so your browser contacts Google to fetch them. The site is hosted on GitHub Pages, and the films on its other pages are embedded from Vimeo.</p>
+    <p>The full plain-language notice for this website and Colton's other sites, covering what is counted, what is never done and how to reach him, is at <a href="https://coltonland.com/privacy/">coltonland.com/privacy</a>.</p>
+  </section>
+
   <details>
     <summary>Changelog</summary>
     <div class="in">
+      <p class="muted">v1.1.0 (2026-09-19, 9:51 AM): Added the About this website section, kept separate from the app's statement on purpose. The rest of slowmotionbirds.com gained a cookie-free visitor counter on 2026-09-18; this page still does not carry it, and the section says both things and links to the full website notice. Nothing the page says about the app changed: no collection, no network, one local preference.</p>
       <p class="muted">v1.0.0 (2026-09-07, 3:29 PM): First edition, written for the Apple TV app's App Store submission. States the position for version 1 of the app: no collection, no network, one local preference.</p>
     </div>
   </details>
