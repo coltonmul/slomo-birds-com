@@ -21,10 +21,17 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-size='22'>🐦</text></svg>">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Colors measured 2026-09-20 (WCAG contrast, floor 7 to 1 for reading text, 4.5 for everything else).
+   --dust is the brand grey and is NOT used for text: 6.19 on the page, 5.73 on a selected row.
+   --dust-text is its text-safe sibling, same hue: 7.89 on the page, 7.30 on a selected row (the worst surface here).
+   Linen 16.27 / 15.06, the intro #C9C2B2 10.91, sun 8.83 / 8.17, pitch words on the sun button 8.83.
+   Over the footage: every control sits on a 72 percent pitch layer, so linen measures 6.68 even
+   against a pure white frame, the brightest any film can get. */
 :root {
   --pitch: #0C0E10;
   --linen: #F0EBE0;
   --dust: #9A917E;
+  --dust-text: #ACA595;
   --sun: #E8A13A;
   --line: #23262B;
 }
@@ -32,40 +39,44 @@ html { background: var(--pitch); }
 body { font-family: 'DM Sans', sans-serif; font-weight: 300; color: var(--linen); background: var(--pitch); line-height: 1.6; min-height: 100svh; }
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; }
 .mono { font-family: 'DM Mono', monospace; }
 
 /* ===== PICKER SCREEN ===== */
 #picker { max-width: 760px; margin: 0 auto; padding: 48px 24px 40px; }
-.p-kicker { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dust); margin-bottom: 10px; }
-.p-kicker a { color: var(--sun); }
+.p-kicker { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dust-text); margin-bottom: 4px; }
+.p-kicker a { color: var(--sun); display: inline-flex; align-items: center; min-height: 44px; margin: 4px 0; }
 .p-kicker a:hover { text-decoration: underline; }
 h1.p-title { font-family: 'Big Shoulders Display', sans-serif; font-weight: 900; font-size: clamp(40px, 9vw, 78px); line-height: 0.88; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 8px; }
 h1.p-title .sun { color: var(--sun); }
-.p-sub { color: #C9C2B2; font-size: 14px; max-width: 480px; margin-bottom: 34px; }
+.p-sub { color: #C9C2B2; font-size: 16px; max-width: 520px; margin-bottom: 34px; }
 
 .p-section { margin-bottom: 30px; }
-.p-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dust); margin-bottom: 12px; }
+.p-label { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dust-text); margin-bottom: 12px; }
 
-.opt-list { display: flex; flex-direction: column; gap: 8px; }
+.opt-list { display: flex; flex-direction: column; gap: 10px; }
 .opt {
   display: flex; align-items: center; gap: 12px;
   border: 1px solid var(--line); border-radius: 3px; padding: 13px 16px;
   min-height: 44px; transition: border-color 0.15s, background 0.15s;
 }
 .opt:has(input:checked) { border-color: var(--sun); background: rgba(232,161,58,0.06); }
-.opt.disabled { opacity: 0.45; }
-.opt input[type="radio"] { accent-color: var(--sun); width: 16px; height: 16px; flex: none; }
+/* an unavailable row says so with a dashed edge and quieter ink, never by fading the words */
+.opt.disabled { border-style: dashed; }
+.opt.disabled .opt-name { color: var(--dust-text); }
+.opt input[type="radio"] { accent-color: var(--sun); width: 18px; height: 18px; flex: none; }
 .opt-body { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-.opt-name { font-size: 14px; color: var(--linen); }
-.opt-note { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dust); }
+.opt-name { font-size: 16px; color: var(--linen); }
+.opt-note { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dust-text); }
 label.opt { cursor: pointer; }
 label.opt.disabled { cursor: not-allowed; }
 
-.p-toggles { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 34px; }
+.p-toggles { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-bottom: 34px; }
 .toggle { display: flex; align-items: center; gap: 9px; min-height: 44px; }
-.toggle input[type="checkbox"] { accent-color: var(--sun); width: 16px; height: 16px; }
-.toggle span { font-size: 13px; color: #C9C2B2; }
-.toggle.is-disabled { opacity: 0.4; }
+.toggle input[type="checkbox"] { accent-color: var(--sun); width: 18px; height: 18px; }
+.toggle span { font-size: 16px; color: #C9C2B2; }
+.toggle.is-disabled { cursor: not-allowed; }
+.toggle.is-disabled span { color: var(--dust-text); }
 
 .release-btn {
   display: block; width: 100%; border: 0; border-radius: 3px;
@@ -77,21 +88,21 @@ label.opt.disabled { cursor: not-allowed; }
 .release-btn:hover { background: var(--linen); }
 .release-btn:active { transform: scale(0.99); }
 
-.p-hint { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.05em; color: var(--dust); text-align: center; margin-top: 16px; }
-.p-back { display: block; text-align: center; margin-top: 22px; font-size: 12px; color: var(--dust); }
+.p-hint { font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.02em; color: var(--dust-text); text-align: center; margin-top: 16px; }
+.p-back { display: block; text-align: center; margin-top: 10px; padding: 11px 0; font-size: 14px; color: var(--dust-text); }
 .p-back:hover { color: var(--sun); }
 
-.p-stamp { margin-top: 44px; padding-top: 20px; border-top: 0.5px solid var(--line); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: var(--dust); text-align: center; }
-.p-stamp summary { cursor: pointer; list-style: none; }
+.p-stamp { margin-top: 32px; padding-top: 8px; border-top: 0.5px solid var(--line); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.06em; color: var(--dust-text); text-align: center; }
+.p-stamp summary { cursor: pointer; list-style: none; padding: 13px 0; }
 .p-stamp summary::-webkit-details-marker { display: none; }
 .p-stamp summary:hover { color: var(--sun); }
-.changelog { margin-top: 10px; text-align: left; max-width: 420px; margin-left: auto; margin-right: auto; }
-.changelog li { margin-bottom: 6px; color: var(--dust); }
+.changelog { margin-top: 6px; text-align: left; max-width: 460px; margin-left: auto; margin-right: auto; padding-left: 18px; font-size: 13px; letter-spacing: 0.02em; }
+.changelog li { margin-bottom: 8px; color: var(--dust-text); }
 
-.p-bottom { margin-top: 40px; padding-top: 26px; border-top: 0.5px solid var(--line); text-align: center; }
-.p-bottom .snark { font-size: 13px; color: var(--dust); margin-bottom: 10px; }
-.p-bottom .built { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dust); }
-.p-bottom .built a { color: var(--sun); }
+.p-bottom { margin-top: 32px; padding-top: 26px; border-top: 0.5px solid var(--line); text-align: center; }
+.p-bottom .snark { font-size: 14px; color: var(--dust-text); margin-bottom: 6px; }
+.p-bottom .built { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dust-text); }
+.p-bottom .built a { color: var(--sun); display: inline-flex; align-items: center; min-height: 44px; margin: 4px 0; }
 .p-bottom .built a:hover { text-decoration: underline; }
 
 /* ===== STAGE (fullscreen playback) ===== */
@@ -111,7 +122,7 @@ label.opt.disabled { cursor: not-allowed; }
 .toast {
   position: absolute; left: 50%; bottom: 90px; transform: translateX(-50%);
   font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--linen); background: rgba(12,14,16,0.65); border: 0.5px solid var(--line);
+  color: var(--linen); background: rgba(12,14,16,0.72); border: 0.5px solid var(--line);
   padding: 10px 18px; border-radius: 2px; opacity: 0; transition: opacity 0.5s ease; z-index: 3; pointer-events: none;
   max-width: 80vw; text-align: center;
 }
@@ -119,23 +130,25 @@ label.opt.disabled { cursor: not-allowed; }
 
 .bar {
   position: absolute; left: 0; right: 0; bottom: 0; z-index: 4;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
+  display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
   padding: 18px; background: linear-gradient(0deg, rgba(0,0,0,0.75), transparent);
   opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
 }
 .bar.show { opacity: 1; pointer-events: auto; }
 .bar button {
-  min-width: 44px; min-height: 44px; border: 1px solid rgba(240,235,224,0.35); border-radius: 3px;
-  background: rgba(12,14,16,0.55); color: var(--linen); font-size: 16px; padding: 0 16px;
+  min-width: 44px; min-height: 44px; border: 1px solid rgba(240,235,224,0.5); border-radius: 3px;
+  background: rgba(12,14,16,0.72); color: var(--linen); font-size: 16px; padding: 0 16px;
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   font-family: 'DM Mono', monospace;
 }
-.bar button:hover { border-color: var(--sun); color: var(--sun); }
-.bar button[disabled] { opacity: 0.4; cursor: not-allowed; }
-.bar button[disabled]:hover { border-color: rgba(240,235,224,0.35); color: var(--linen); }
-.bar .lbl { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+.bar button:hover { border-color: var(--sun); background: var(--sun); color: var(--pitch); }
+/* not available yet: dashed edge and a not-allowed cursor, the words stay at full strength */
+.bar button[disabled] { border-style: dashed; cursor: not-allowed; }
+.bar button[disabled]:hover { border-color: rgba(240,235,224,0.5); background: rgba(12,14,16,0.72); color: var(--linen); }
+.bar .lbl { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
 
-@media (max-width: 560px) { #picker { padding: 36px 18px 30px; } }
+@media (max-width: 560px) { #picker { padding: 36px 18px 30px; } .p-kicker { letter-spacing: 0.08em; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 </style>
 </head>
 <body>
@@ -171,8 +184,9 @@ label.opt.disabled { cursor: not-allowed; }
   <a class="p-back" href="/">&larr; Back to slowmotionbirds.com</a>
 
   <details class="p-stamp">
-    <summary>Updated Sat / 2026-09-19 / 9:52 AM CT &middot; v1.0.3 &middot; changelog</summary>
+    <summary>Updated Sun / 2026-09-20 / 9:22 PM CT &middot; v1.0.4 &middot; changelog</summary>
     <ul class="changelog mono">
+      <li>1.0.4 (2026-09-20): Legibility pass, styling only. The player itself is unchanged and no words changed. Nothing is under 12px now, the intro, playlist names and shuffle labels are 16px, and the grey used for labels and small print moved to a lighter sibling that measures 7.9 to 1 on the page and 7.3 to 1 on a selected row (it was 6.2 and 5.7 against a floor of 7). A playlist that is not available yet shows a dashed edge and quieter ink, where it used to fade to 45 percent and its words dropped under the floor. During playback the buttons and the title card sit on a darker layer, so their words measure 6.7 to 1 even over a pure white frame. Every link is a full 44px touch target and keyboard focus shows a visible ring.</li>
       <li>1.0.3 (2026-09-19): A quiet Privacy link in the footer, pointing at the plain-language notice for this website at coltonland.com/privacy (what the visitor counter counts, what is never done, how to reach Colton). The player itself is unchanged.</li>
       <li>1.0.2 (2026-09-18): Added the site's visitor counter (Cloudflare Web Analytics: no cookies, counts visits, not people). The player itself is unchanged.</li>
       <li>1.0.1 (2026-08-09): Exit and Esc now leave the player even when the browser denies or lacks fullscreen, instead of waiting on a fullscreenchange event that would never fire.</li>
@@ -183,7 +197,7 @@ label.opt.disabled { cursor: not-allowed; }
   <div class="p-bottom">
     <div class="snark">The birds don't know they're background noise. Let's keep it that way.</div>
     <div class="built">Built by <a href="https://colton.land" target="_blank" rel="noopener">Colton Mulligan</a></div>
-    <div class="mono" style="margin-top:4px;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dust)"><a href="https://coltonland.com/privacy/" style="color:inherit;display:inline-flex;align-items:center;min-height:44px;text-decoration:underline;text-underline-offset:3px">Privacy</a></div>
+    <div class="mono" style="margin-top:4px;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dust-text)"><a href="https://coltonland.com/privacy/" target="_blank" rel="noopener" style="color:inherit;display:inline-flex;align-items:center;min-height:44px;text-decoration:underline;text-underline-offset:3px">Privacy</a></div>
   </div>
 </div>
 

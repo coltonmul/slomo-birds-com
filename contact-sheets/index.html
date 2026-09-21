@@ -14,29 +14,45 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-size='22'>🐦</text></svg>">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--pitch:#0C0E10;--linen:#F0EBE0;--dust:#9A917E;--sun:#E8A13A;--line:#23262B;--panel:#12151A}
+:root{--pitch:#0C0E10;--linen:#F0EBE0;--dust:#9A917E;--dust-text:#ACA595;--sun:#E8A13A;--line:#23262B;--panel:#12151A}
 body{font-family:'DM Sans',sans-serif;font-weight:300;color:var(--linen);background:var(--pitch);line-height:1.65}
 a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--sun);outline-offset:3px}
 .wrap{max-width:880px;margin:0 auto;padding:60px 30px 40px}
-.annot{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--dust);margin-bottom:12px}
-.annot a{color:var(--sun)}
+.annot{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--dust-text);margin-bottom:4px}
+.annot a{color:var(--sun);display:inline-flex;align-items:center;min-height:44px;margin:4px 0}
 h1{font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:clamp(44px,8vw,84px);line-height:.88;text-transform:uppercase}
 h1 .sun{color:var(--sun)}
-.lede{max-width:640px;margin-top:16px;font-size:15px;color:#CFC8B8}
-.stamp{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dust);margin:8px 0 30px}
+.lede{max-width:640px;margin-top:16px;font-size:17px;color:#CFC8B8}
+.stamp{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust-text);margin:8px 0 30px}
 .card{display:block;border:0.5px solid var(--line);background:var(--panel);border-radius:4px;padding:18px 20px;margin-bottom:10px;transition:border-color .15s}
 .card:hover{border-color:var(--sun)}
-.nm{font-family:'DM Mono',monospace;font-size:14px}
-.mt{font-size:12px;color:var(--dust);margin-top:4px}
-.footer{border-top:0.5px solid var(--line);margin-top:56px;padding:26px 30px;text-align:center;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dust)}
+.nm{font-family:'DM Mono',monospace;font-size:15px}
+.mt{font-size:14px;color:var(--dust-text);margin-top:4px}
+details{border:0.5px solid var(--line);border-radius:4px;margin-top:30px}
+summary{cursor:pointer;padding:14px 18px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust-text)}
+details .in{padding:0 18px 16px}
+.muted{max-width:660px;margin:0 0 12px;color:var(--dust-text);font-size:14px}
+.footer{border-top:0.5px solid var(--line);margin-top:56px;padding:22px 30px;text-align:center;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dust-text)}
+.footer{text-wrap:balance}
+.footer a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin:4px 0}
 .footer a:hover{color:var(--sun)}
+@media (max-width:560px){.wrap{padding:44px 18px 30px}.annot{letter-spacing:.08em}.footer{padding-left:18px;padding-right:18px;letter-spacing:.06em}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 </style></head><body>
 <div class="wrap">
   <div class="annot"><a href="/">&larr; slowmotionbirds.com</a> &nbsp;&middot;&nbsp; field notes</div>
   <h1>Contact<br><span class="sun">Sheets.</span></h1>
   <p class="lede">One visual proof sheet per analyzed footage session, named exactly by its archive folder: every clip's reference frame, every detected event with its peak-action thumbnail, scores and timecodes. This is the calibration record: reviewing these sheets over time is how the grading rules get corrected, refined, and taught what this yard calls interesting.</p>
-  <p class="stamp">4 sessions published &middot; Updated Tue / 2026-08-11 / 1:08 AM CT</p>
+  <p class="stamp">v1.1.0 &middot; 4 sessions published &middot; Updated Sun / 2026-09-20 / 9:22 PM CT</p>
   <a class='card' href='/contact-sheets/2026-08-10-north-wing-double-feeder/'><div class='nm'>2026 08 10 North Wing Double Feeder</div><div class='mt'>61 clips &middot; 395 events &middot; published 2026-08-11</div></a><a class='card' href='/contact-sheets/2024-12-31-overcast-tree-feeder/'><div class='nm'>2024 12 31 Overcast Tree Feeder</div><div class='mt'>33 clips &middot; 152 events &middot; published 2026-08-09</div></a><a class='card' href='/contact-sheets/2024-12-30-afternoon-window-double-feeder-batch-2/'><div class='nm'>2024 12 30 Afternoon Window Double Feeder Batch 2</div><div class='mt'>83 clips &middot; 72 events &middot; published 2026-08-09</div></a><a class='card' href='/contact-sheets/2024-12-30-afternoon-window-double-feeder/'><div class='nm'>2024 12 30 Afternoon Window Double Feeder</div><div class='mt'>55 clips &middot; 69 events &middot; published 2026-08-09</div></a>
+  <details>
+    <summary>Changelog</summary>
+    <div class="in">
+      <p class="muted">v1.1.0 (2026-09-20): Legibility pass, styling only. No session, count or date changed. Nothing on the page is under 12px now and paragraphs are 16px. The grey used for labels and small print moved to a lighter sibling that measures 7.9 to 1 on the page and 7.5 to 1 on the cards (it was 6.2 and 5.9 against a floor of 7). The back link and footer links are full 44px touch targets, and keyboard focus shows a visible ring. The page also shows its version and this changelog for the first time.</p>
+      <p class="muted">v1.0.0 (2026-08-09): First edition of the contact sheets index.</p>
+    </div>
+  </details>
 </div>
 <footer class="footer">
   <a href="/">slowmotionbirds.com</a> &nbsp;&middot;&nbsp; <a href="/workflow/">The Workflow</a> &nbsp;&middot;&nbsp; <a href="/footage-levels/">Footage Levels</a> &nbsp;&middot;&nbsp; <a href="/light-and-lens/">Light &amp; Lens Calculator</a> &nbsp;&middot;&nbsp; &copy; 2026

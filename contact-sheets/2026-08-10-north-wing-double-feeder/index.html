@@ -5,35 +5,44 @@
 <link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link href='https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap' rel='stylesheet'>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0C0E10;--panel:#12151A;--border:#23262B;--text:#F0EBE0;--muted:#9A917E;--blue:#E8A13A;--orange:#E8813A;--green:#8FBF7F}
-body{background:var(--bg);color:var(--text);font:15px/1.55 'DM Sans',-apple-system,sans-serif;font-weight:300;padding:28px}
+:root{--bg:#0C0E10;--panel:#12151A;--border:#23262B;--text:#F0EBE0;--dust:#9A917E;--muted:#ACA595;--blue:#E8A13A;--orange:#E8813A;--green:#8FBF7F}
+body{background:var(--bg);color:var(--text);font:16px/1.55 'DM Sans',-apple-system,sans-serif;font-weight:300;padding:28px}
 .wrap{max-width:1180px;margin:0 auto}
-.annot{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.annot a{color:#E8A13A;text-decoration:none}
+.annot{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.annot a{color:#E8A13A;text-decoration:none;display:inline-flex;align-items:center;min-height:44px;margin:4px 0}
 h1{font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:clamp(28px,5vw,52px);text-transform:uppercase;line-height:.92;margin-bottom:6px}
-.stamp{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px}
+.stamp{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:18px}
 .statrow{display:flex;gap:26px;flex-wrap:wrap;border:0.5px solid var(--border);background:var(--panel);border-radius:6px;padding:14px 18px;margin-bottom:22px}
-.stat .k{font-size:10.5px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'DM Mono',monospace}
+.stat .k{font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'DM Mono',monospace}
 .stat .v{font-size:20px;font-weight:500;font-variant-numeric:tabular-nums}
 .clip{border:0.5px solid var(--border);background:var(--panel);border-radius:6px;padding:16px;margin-bottom:12px}
 .cliphead{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .cliphead img{width:200px;border-radius:4px;border:0.5px solid var(--border)}
-.clipname{font-family:'DM Mono',monospace;font-size:13px}
-.clipmeta{font-size:12px;color:var(--muted)}
+.clipname{font-family:'DM Mono',monospace;font-size:14px}
+.clipmeta{font-size:13px;color:var(--muted)}
 .events{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:12px}
 .ev{background:var(--bg);border:0.5px solid var(--border);border-radius:5px;padding:10px}
 .ev img{width:100%;border-radius:3px;margin-bottom:6px}
-.ev .t{font-family:'DM Mono',monospace;font-size:11.5px;color:#E8A13A}
-.ev .m{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
-.ev .f{font-size:10.5px;color:var(--orange);text-transform:uppercase;letter-spacing:.06em}
-.noev{color:var(--muted);font-size:12.5px;margin-top:8px}
-.foot{margin-top:26px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;border-top:0.5px solid var(--border);padding-top:18px}
-.foot a{color:var(--muted);text-decoration:none}
+.ev .t{font-family:'DM Mono',monospace;font-size:12px;color:#E8A13A}
+.ev .m{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.ev .f{font-size:12px;color:var(--orange);text-transform:uppercase;letter-spacing:.06em}
+.noev{color:var(--muted);font-size:14px;margin-top:8px}
+details{border:0.5px solid var(--border);border-radius:4px;margin-top:26px}
+summary{cursor:pointer;padding:14px 18px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+details .in{padding:0 18px 16px}
+details p{max-width:660px;margin:0 0 12px;font-size:14px;color:var(--muted)}
+.foot{margin-top:26px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;border-top:0.5px solid var(--border);padding-top:14px}
+.foot{text-wrap:balance}
+.foot a{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin:4px 0}
 .foot a:hover{color:#E8A13A}
+@media (max-width:560px){body{padding:22px 18px}.annot{letter-spacing:.06em}.stamp{letter-spacing:.06em}.foot{letter-spacing:.06em}}
+
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 </style></head><body><div class='wrap'>
 <div class='annot'><a href='/'>&larr; slowmotionbirds.com</a> &nbsp;&middot;&nbsp; <a href='/contact-sheets/'>contact sheets</a> &nbsp;&middot;&nbsp; field notes</div>
 <h1>Contact sheet: 2026 08 10 North Wing Double Feeder</h1>
-<div class='stamp'>v1.0.0 &middot; Updated Tue / 2026-08-11 / 1:08 AM CT &middot; shakedown pass: maskless, expect over-triggering</div>
+<div class='stamp'>v1.1.0 &middot; Updated Sun / 2026-09-20 / 9:22 PM CT &middot; shakedown pass: maskless, expect over-triggering</div>
 <div class='statrow'>
 <div class='stat'><div class='k'>clips analyzed</div><div class='v'>61 / 61</div></div>
 <div class='stat'><div class='k'>events found</div><div class='v'>395</div></div>
@@ -796,6 +805,7 @@ h1{font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:clam
 <div class='ev'><img loading='lazy' src='thumbs/C7355_peak.jpg' alt=''><div class='t'>C7355-05 &middot; src 50.55-51.75 s</div><div class='m'>11.0 tl-s with handles &middot; peak 0.0154</div><div class='f'>trimmed</div></div>
 </div>
 </div>
+<details><summary>Changelog</summary><div class='in'><p>v1.1.0 (2026-09-20): Legibility pass, styling only. No clip, event, score or timecode changed. Nothing on the sheet is under 12px now and the body is 16px. The grey used for labels and small print moved to a lighter sibling that measures 7.9 to 1 on the page and 7.5 to 1 on the panels (it was 6.2 and 5.9 against a floor of 7). The back links and footer links are full 44px touch targets, and keyboard focus shows a visible ring.</p><p>v1.0.0 (2026-08-09): First edition of the published contact sheet.</p></div></details>
 <div class='foot'><a href='/'>slowmotionbirds.com</a> &nbsp;&middot;&nbsp; <a href='/contact-sheets/'>Contact Sheets</a> &nbsp;&middot;&nbsp; <a href='/workflow/'>The Workflow</a> &nbsp;&middot;&nbsp; &copy; 2026</div>
 </div>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ddef815fbbd44b34a2a5f96e9fe8a9ef"}'></script><!-- End Cloudflare Web Analytics -->

@@ -16,30 +16,42 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-size='22'>🐦</text></svg>">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root { --pitch:#0C0E10; --linen:#F0EBE0; --dust:#9A917E; --sun:#E8A13A; --line:#23262B; --panel:#12151A; }
+/* Colors measured 2026-09-20 (WCAG contrast, floor 7 to 1 for reading text, 4.5 for everything else).
+   --dust is the brand grey and is NOT used for text: 6.19 on the page, 5.86 on the panel.
+   --dust-text is its text-safe sibling, same hue: 7.89 on the page, 7.47 on the panel.
+   Linen 16.27 / 15.39, the lede #CFC8B8 11.61, sun 8.83 / 8.35. */
+:root { --pitch:#0C0E10; --linen:#F0EBE0; --dust:#9A917E; --dust-text:#ACA595; --sun:#E8A13A; --line:#23262B; --panel:#12151A; }
 html { background: var(--pitch); }
 body { font-family:'DM Sans',sans-serif; font-weight:300; color:var(--linen); background:var(--pitch); line-height:1.65; }
 a { color: inherit; text-decoration: none; }
+:focus-visible { outline:2px solid var(--sun); outline-offset:3px; }
 .wrap { max-width: 760px; margin: 0 auto; padding: 60px 30px 40px; }
-.annot { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--dust); margin-bottom:12px; }
-.annot a { color: var(--sun); }
+.annot { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--dust-text); margin-bottom:4px; }
+.annot a { color: var(--sun); display:inline-flex; align-items:center; min-height:44px; margin:4px 0; }
 h1 { font-family:'Big Shoulders Display',sans-serif; font-weight:900; font-size:clamp(44px,8vw,84px); line-height:.88; text-transform:uppercase; }
 h1 .sun { color: var(--sun); }
-.lede { max-width:640px; margin-top:16px; font-size:15px; color:#CFC8B8; }
-.stamp { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--dust); margin-top:8px; }
+.lede { max-width:640px; margin-top:16px; font-size:17px; color:#CFC8B8; }
+.stamp { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--dust-text); margin-top:8px; }
 h2 { font-family:'Big Shoulders Display',sans-serif; font-weight:700; font-size:clamp(20px,3vw,28px); text-transform:uppercase; margin:40px 0 12px; }
-p { max-width: 660px; margin: 0 0 12px; font-size:14.5px; }
-.muted { color: var(--dust); font-size: 13px; }
+p { max-width: 660px; margin: 0 0 12px; font-size:16px; }
+p a, li a { text-decoration:underline; text-underline-offset:3px; }
+.annot a { text-decoration:none; }
+a[href^="mailto:"] { display:inline-flex; align-items:center; min-height:44px; }
+.muted { color: var(--dust-text); font-size: 14px; }
 .panel { border:0.5px solid var(--line); background:var(--panel); border-radius:4px; padding:20px 22px; margin:18px 0; }
 ul { margin: 0 0 12px 18px; }
-li { font-size:14.5px; margin-bottom:6px; }
+li { font-size:16px; margin-bottom:6px; }
 .site-note { border-top:0.5px solid var(--line); margin-top:48px; padding-top:8px; }
 .site-note a { color:var(--sun); text-decoration:underline; text-underline-offset:3px; }
-details { border-top:0.5px solid var(--line); margin-top:40px; padding-top:16px; }
-summary { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--dust); cursor:pointer; }
-details .in { padding-top:12px; }
-.footer { border-top:0.5px solid var(--line); margin-top:56px; padding:26px 30px; text-align:center; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust); }
+details { border-top:0.5px solid var(--line); margin-top:40px; padding-top:4px; }
+summary { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--dust-text); cursor:pointer; padding:14px 0; }
+details .in { padding-top:4px; }
+.footer { border-top:0.5px solid var(--line); margin-top:56px; padding:22px 30px; text-align:center; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust-text); }
+.footer { text-wrap:balance; }
+.footer a { display:inline-flex; align-items:center; justify-content:center; min-width:44px; min-height:44px; margin:4px 0; }
 .footer a:hover { color: var(--sun); }
+@media (max-width:560px){ .wrap{padding:44px 18px 30px;} .annot{letter-spacing:.08em;} .footer{padding-left:18px; padding-right:18px; letter-spacing:.06em;} }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition:none !important; animation:none !important; } }
 </style>
 </head>
 <body>
@@ -48,7 +60,7 @@ details .in { padding-top:12px; }
   <p class="annot"><a href="/">&larr; slowmotionbirds.com</a></p>
   <h1>Privacy<span class="sun">.</span></h1>
   <p class="lede">The Slow Motion Birds app for Apple TV does not collect any data about you. There is nothing to opt out of, because there is nothing being gathered.</p>
-  <p class="stamp">v1.2.0 &middot; Updated Sat / 2026-09-19 / 10:38 PM CT</p>
+  <p class="stamp">v1.2.1 &middot; Updated Sun / 2026-09-20 / 9:22 PM CT</p>
 
   <div class="panel">
     <p>No accounts. No sign in. No analytics. No advertising and no advertising identifiers. No tracking, and no data shared with anyone. The app makes no network requests at all: every clip is bundled inside the app itself, so once it is installed it works with the Apple TV disconnected from the internet.</p>
@@ -82,6 +94,7 @@ details .in { padding-top:12px; }
   <details>
     <summary>Changelog</summary>
     <div class="in">
+      <p class="muted">v1.2.1 (2026-09-20, 9:22 PM): Legibility pass, styling only. Not one word of the statement above changed, and the visitor counter is still off this page. Nothing on the page is under 12px now and paragraphs are 16px. The grey used for small print moved to a lighter sibling that measures 7.9 to 1 on the page background (it was 6.2 against a floor of 7). Links inside sentences are underlined so color is not the only cue, the back link, the email address, the Changelog toggle and the footer links are full 44px touch targets, and keyboard focus shows a visible ring.</p>
       <p class="muted">v1.2.0 (2026-09-19, 10:38 PM): What stays on your Apple TV now lists three things instead of one: the shuffle setting, the clips you starred as favorites, and whether you chose to play favorites only. The app has kept favorites on the device since that feature was added, which was before the app went to the App Store, and this page had not caught up. It now matches the privacy policy text on the app's App Store listing. Nothing about collection changed: the app still collects nothing and makes no network requests, and all three settings stay on the device. Also, the link to coltonland.com now opens in a new tab.</p>
       <p class="muted">v1.1.0 (2026-09-19, 9:51 AM): Added the About this website section, kept separate from the app's statement on purpose. The rest of slowmotionbirds.com gained a cookie-free visitor counter on 2026-09-18; this page still does not carry it, and the section says both things and links to the full website notice. Nothing the page says about the app changed: no collection, no network, one local preference.</p>
       <p class="muted">v1.0.0 (2026-09-07, 3:29 PM): First edition, written for the Apple TV app's App Store submission. States the position for version 1 of the app: no collection, no network, one local preference.</p>
