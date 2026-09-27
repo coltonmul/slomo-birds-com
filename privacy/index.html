@@ -73,18 +73,32 @@ details .in { padding-top:4px; }
 
   <p class="annot"><a href="/">&larr; slowmotionbirds.com</a></p>
   <h1>Privacy<span class="sun">.</span></h1>
-  <p class="lede">The Slow Motion Birds app for Apple TV does not collect any data about you. There is nothing to opt out of, because there is nothing being gathered.</p>
-  <p class="stamp">v1.3.0 &middot; Updated Sat / 2026-09-26 / 8:49 PM CT </p>
+  <p class="lede">The Slow Motion Birds apps do not collect any data about you. There is nothing to opt out of, because there is nothing being gathered.</p>
+  <p class="stamp">v1.4.0 &middot; Updated Sun / 2026-09-27 / 2:20 AM CT </p>
 
   <div class="panel">
-    <p>No accounts. No sign in. No analytics. No advertising and no advertising identifiers. No tracking, and no data shared with anyone. The app makes no network requests at all: every clip is bundled inside the app itself, so once it is installed it works with the Apple TV disconnected from the internet.</p>
+    <p>No accounts. No sign in. No analytics. No advertising and no advertising identifiers. No tracking, and no data shared with anyone. That is true of every version, and it is the part that will not change.</p>
   </div>
 
-  <h2>What stays on your Apple TV</h2>
-  <p>Three things, and they never leave the device: whether shuffle is on or off, which clips you starred as favorites, and whether you chose to play favorites only. Apple TV stores those preferences for the app the same way it stores any other app setting. Deleting the app removes them.</p>
+  <h2>Two versions, and what is different about them</h2>
+  <p><strong>Version 1.0</strong>, the one on the App Store, makes no network requests at all. Every clip is bundled inside the app itself, so once it is installed it works with the Apple TV disconnected from the internet.</p>
+  <p><strong>Version 1.1</strong>, which adds a clip of the day, does reach the internet, and this page says so before that version ships rather than after. It reads three things and sends nothing about you:</p>
+  <ul>
+    <li>A small published file that says which clip is the clip of the day and the clip of the week, and the video for those clips. Both are ordinary downloads of public files, the same as a web page fetching an image.</li>
+    <li>If, and only if, you type a town or a ZIP code into the app, it asks our own small service how many places nearby have reported that bird to eBird lately. That service holds the eBird key, answers from its own cache, and does not store or log what you typed, what it resolved to, or that you asked at all.</li>
+  </ul>
+  <p>The app never asks for your location. There is no location permission in it, and no code in it that reads one. The only way it knows anything about where you are is the town or ZIP you choose to type, and that stays on your own device.</p>
+  <p>Fourteen clips are still built into every version, so the app still plays with no internet at all.</p>
+
+  <h2>What stays on your device</h2>
+  <p>These things, and they never leave it: whether shuffle is on or off, which clips you starred as favorites, whether you chose to play favorites only, whether the app opens each session with the clip of the day, whether the nerdy camera details are shown, the town or ZIP you typed for bird counts, and a list of the past clips of the day the app has shown you. Your Apple TV, iPhone or iPad stores those the same way it stores any other app setting. Deleting the app removes them, and version 1.1 also has a button in its settings that forgets all of them at once.</p>
+  <p>The clips the app has downloaded are kept in its cache so it keeps working offline for a week. They are just video files, they say nothing about you, and the system may clear them whenever it needs the space.</p>
 
   <h2>The footage</h2>
-  <p>Every clip in the app was shot by Colton Mulligan in his own backyard in Nashville. No cameras in the app, no photos read from your device, no access to anything on your Apple TV.</p>
+  <p>Every clip in the app was shot by Colton Mulligan, in his own backyard in Nashville and on his own trips. No cameras in the app, no photos read from your device, no access to anything on your Apple TV, iPhone or iPad.</p>
+
+  <h2>Where the bird counts come from</h2>
+  <p>Nearby sighting numbers come from eBird, run by the Cornell Lab of Ornithology, and the app says so wherever it shows them. The app talks to our own service rather than to eBird directly, so that eBird never sees you, only us, and all we ever send is a rounded map location for the place you typed and the name of the bird on screen.</p>
 
   <h2>Children</h2>
   <p>The app is rated 4 and up. Since it collects nothing from anyone, it collects nothing from children either.</p>
@@ -93,7 +107,7 @@ details .in { padding-top:4px; }
   <p>Write to <a href="mailto:colton@foxfuelcreative.com" style="color:var(--sun)">colton@foxfuelcreative.com</a>.</p>
 
   <h2>Changes</h2>
-  <p class="muted">If a future version of the app ever does collect something, this page changes first and the version stamp above moves with it.</p>
+  <p class="muted">If a future version of the app ever does collect something, this page changes first and the version stamp above moves with it. That is the rule, and version 1.1 is the first time it has been used: this page described 1.1's network reads before 1.1 was submitted to Apple.</p>
 
   <!-- ABOUT THIS WEBSITE. Deliberately separate from everything above, which is about the
        Apple TV app and is the page the App Store listing points at. Nothing above this line
@@ -108,6 +122,7 @@ details .in { padding-top:4px; }
   <details>
     <summary>Changelog</summary>
     <div class="in">
+      <p class="muted">v1.4.0 (2026-09-27, 2:20 AM): Written BEFORE version 1.1 of the apps is submitted, which is the point of the rule this page sets itself. Version 1.1 adds a clip of the day, and with it the app's first network requests: a published schedule file, the clips it names, and, only when you type a town or a ZIP, a bird count from our own eBird service. Nothing about you is collected, stored or logged at either end, and the app still asks for no location permission of any kind. The page now says which version does what, rather than saying "no network requests at all" as though there were only one version. What stays on your device grew to seven settings plus the list of past days, and version 1.1 adds a button that forgets all of them. The page now covers the iPhone and iPad app as well as the Apple TV one.</p>
       <p class="muted">v1.3.0 (2026-09-26, 8:49 PM): The footer now lists every page of the site, on every page, with the one you are on marked. Each page used to carry its own partial list, and the published contact sheets and the player carried almost none, so the deeper pages were only findable if you already knew they were there.</p>
       <p class="muted">v1.2.2 (2026-09-25, 3:01 PM): A pasted link to this page now unfurls into its own photo card, built from a frame of the films, instead of the shared text card. Not one word of the statement above changed.</p>
       <p class="muted">v1.2.1 (2026-09-20, 9:22 PM): Legibility pass, styling only. Not one word of the statement above changed, and the visitor counter is still off this page. Nothing on the page is under 12px now and paragraphs are 16px. The grey used for small print moved to a lighter sibling that measures 7.9 to 1 on the page background (it was 6.2 against a floor of 7). Links inside sentences are underlined so color is not the only cue, the back link, the email address, the Changelog toggle and the footer links are full 44px touch targets, and keyboard focus shows a visible ring.</p>
