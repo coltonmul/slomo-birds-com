@@ -100,6 +100,17 @@ details .in { padding: 0 18px 16px; }
 .footer a:hover { color: var(--sun); }
 @media (max-width:560px){ .wrap{padding:44px 18px 30px;} .annot{letter-spacing:.08em;} .footer{padding-left:18px; padding-right:18px; letter-spacing:.06em;} }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition:none !important; animation:none !important; } }
+/* FOOTER-NAV:START  one footer, every page of the site on it (2026-09-26) */
+.fnav,.fmeta{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 22px;max-width:1060px;margin:0 auto;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+/* 12px top and bottom keeps every link clear of whatever sits above the nav by more
+   than the 8px minimum separation, including the player's own "Built by" line. */
+.fnav{margin-top:12px}
+.fmeta{margin-top:12px}
+.fnav a,.fmeta a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;margin:0;color:inherit;text-decoration:none}
+.fnav a:hover,.fmeta a:hover{color:#E8A13A}
+.fnav a[aria-current]{color:#E8A13A}
+.fmeta span{display:inline-flex;align-items:center;min-height:44px}
+/* FOOTER-NAV:END */
 </style>
 </head>
 <body>
@@ -107,7 +118,7 @@ details .in { padding: 0 18px 16px; }
   <div class="annot"><a href="/">&larr; slowmotionbirds.com</a> &nbsp;&middot;&nbsp; field notes</div>
   <h1>Reading the<br><span class="sun">Waveform.</span></h1>
   <p class="lede">The scope on the monitor answers one question well: is the bird exposed. It does not answer whether the picture looks nice, and it will quietly lie to you about a cardinal. Every number on this page was measured off real frames from this yard, shot on the a7S III in S-Log3, not taken from a chart.</p>
-  <p class="stamp">v1.0.0 &middot; Updated Sat / 2026-09-26 / 8:22 PM CT &middot; measured from 2024 12 31 Overcast Tree Feeder</p>
+  <p class="stamp">v1.1.0 &middot; Updated Sat / 2026-09-26 / 8:49 PM CT &middot; measured from 2024 12 31 Overcast Tree Feeder</p>
 
   <h2>It is a waveform, not a histogram</h2>
   <p>A histogram counts pixels by brightness and throws away where they were. A waveform keeps the position: the scope is as wide as the frame, and each column of the scope is the same column of the picture, stood on end. Brightness runs up the side in IRE, 0 at the bottom, 100 at the top.</p>
@@ -226,6 +237,7 @@ details .in { padding: 0 18px 16px; }
   <details>
     <summary>How these numbers were measured</summary>
     <div class="in">
+      <p class="muted">v1.1.0 (2026-09-26, 8:49 PM): The footer now lists every page of the site, on every page, with the one you are on marked. Each page used to carry its own partial list, and the published contact sheets and the player carried almost none, so the deeper pages were only findable if you already knew they were there.</p>
       <p class="muted">Every figure is one real frame from <b>2024 12 31 Overcast Tree Feeder</b>, decoded from the original 4K 120p files at 10 bit, with the waveform generated from the source clip in its native YUV rather than redrawn from a screenshot. Luma is read as code values and converted with IRE = (CV &minus; 64) / 876 &times; 100, which reproduces Sony's own published reference points exactly: code value 95 for black at 3.5 IRE, 420 for 18 percent grey at 41, and 598 for 90 percent white at 61.</p>
       <p class="muted">Plumage was isolated by chroma rather than by hand, keeping only pixels whose hue and saturation match the bird and only where those pixels cluster densely, which keeps warm seed hulls and tinted feeder wood out of the cardinal's numbers. Channel values come from converting the same pixels back to R, G and B in the identical code value space, so every number on this page sits on one ruler. The per channel figures held to within half an IRE across two independent frames of different cardinals.</p>
       <p class="muted">One stop equals log10(2) &times; 261.5 = 78.7 code values = 8.99 IRE in the log part of the curve, which is where the "about 9 IRE" shorthand comes from. The clipping point of 94 IRE works out to 6.01 stops above middle grey.</p>
@@ -240,8 +252,24 @@ details .in { padding: 0 18px 16px; }
   </details>
 </div>
 <footer class="footer">
-  <a href="/">slowmotionbirds.com</a> &nbsp;&middot;&nbsp; <a href="/workflow/">The Workflow</a> &nbsp;&middot;&nbsp; <a href="/contact-sheets/">Contact Sheets</a> &nbsp;&middot;&nbsp; <a href="/footage-levels/">Footage Levels</a> &nbsp;&middot;&nbsp; <a href="/light-and-lens/">Light &amp; Lens</a> &nbsp;&middot;&nbsp; &copy; 2026
-  <div style="margin-top:4px;font-size:12px"><a href="https://coltonland.com/privacy/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;min-height:44px;text-decoration:underline;text-underline-offset:3px">Privacy</a></div>
+  <!-- FOOTER-NAV:START -->
+  <nav class="fnav" aria-label="Every page">
+    <a href="/">Home</a>
+    <a href="/workflow/">The Workflow</a>
+    <a href="/contact-sheets/">Contact Sheets</a>
+    <a href="/footage-levels/">Footage Levels</a>
+    <a href="/light-and-lens/">Light &amp; Lens</a>
+    <a href="/waveform/" aria-current="page">Reading the Waveform</a>
+    <a href="/player/">Player (beta)</a>
+    <a href="/privacy/">App Privacy</a>
+  </nav>
+  <div class="fmeta">
+    <a href="https://vimeo.com/coltonphotography" target="_blank" rel="noopener">Vimeo</a>
+    <a href="https://coltonland.com/privacy/" target="_blank" rel="noopener">Site Privacy</a>
+    <span>Built by Colton with Claude</span>
+    <span>&copy; 2026</span>
+  </div>
+  <!-- FOOTER-NAV:END -->
 </footer>
 
 <script>

@@ -77,6 +77,17 @@ details .in { padding: 0 18px 16px; }
 .footer a:hover { color: var(--sun); }
 @media (max-width:560px){ .wrap{padding:44px 18px 30px;} .annot{letter-spacing:.08em;} .footer{padding-left:18px; padding-right:18px; letter-spacing:.06em;} }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition:none !important; animation:none !important; } }
+/* FOOTER-NAV:START  one footer, every page of the site on it (2026-09-26) */
+.fnav,.fmeta{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 22px;max-width:1060px;margin:0 auto;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+/* 12px top and bottom keeps every link clear of whatever sits above the nav by more
+   than the 8px minimum separation, including the player's own "Built by" line. */
+.fnav{margin-top:12px}
+.fmeta{margin-top:12px}
+.fnav a,.fmeta a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;margin:0;color:inherit;text-decoration:none}
+.fnav a:hover,.fmeta a:hover{color:#E8A13A}
+.fnav a[aria-current]{color:#E8A13A}
+.fmeta span{display:inline-flex;align-items:center;min-height:44px}
+/* FOOTER-NAV:END */
 </style>
 </head>
 <body>
@@ -84,7 +95,7 @@ details .in { padding: 0 18px 16px; }
   <div class="annot"><a href="/">&larr; slowmotionbirds.com</a> &nbsp;&middot;&nbsp; field notes</div>
   <h1>Light &amp;<br><span class="sun">Lens.</span></h1>
   <p class="lede">The setup calculator for this yard: one Sony a7S III at its 12,800 second base ISO, three lenses, two shooting positions, several feeders. Pick the rig; it answers the three questions that decide whether the footage is sharp: is the whole feeder inside the focus zone, how big is the bird in frame, and what will the light let you get away with.</p>
-  <p class="stamp">v1.0.4 &middot; Updated Fri / 2026-09-25 / 3:01 PM CT &middot; all glass math uses full-frame CoC 0.030mm</p>
+  <p class="stamp">v1.1.0 &middot; Updated Sat / 2026-09-26 / 8:49 PM CT &middot; all glass math uses full-frame CoC 0.030mm</p>
 
   <div class="cols">
     <div class="panel">
@@ -159,6 +170,7 @@ details .in { padding: 0 18px 16px; }
   <details>
     <summary>Changelog</summary>
     <div class="in">
+      <p class="muted">v1.1.0 (2026-09-26, 8:49 PM): The footer now lists every page of the site, on every page, with the one you are on marked. Each page used to carry its own partial list, and the published contact sheets and the player carried almost none, so the deeper pages were only findable if you already knew they were there.</p>
       <p class="muted">v1.0.4 (2026-09-25, 3:01 PM): A pasted link to this page now unfurls into its own photo card, built from a frame of the films, instead of the shared text card. Nothing on the page itself changed.</p>
       <p class="muted">v1.0.3 (2026-09-20, 9:22 PM): Legibility pass, styling only. The calculator and its math are unchanged and no words on the page changed. Nothing is under 12px now (labels and table headings were 9.5 and 10px), paragraphs are 16px, and every select and number box is 16px type in a 44px tall box with a border that measures 3.3 to 1, where the old hairline was 1.2 and the box edges could not be seen. The grey used for labels and small print moved to a lighter sibling that measures 7.9 to 1 on the page and 7.5 to 1 on the panels (it was 6.2 and 5.9 against a floor of 7). The red chip got a deeper red behind its words: 5.1 to 1, where it was 3.7. The back link and footer links are full 44px touch targets and keyboard focus shows a visible ring.</p>
       <p class="muted">v1.0.2 (2026-09-19, 9:52 AM): A quiet Privacy link in the footer, pointing at the plain-language notice for this website at coltonland.com/privacy (what the visitor counter counts, what is never done, how to reach Colton). The calculator and its math are unchanged.</p>
@@ -168,8 +180,24 @@ details .in { padding: 0 18px 16px; }
   </details>
 </div>
 <footer class="footer">
-  <a href="/">slowmotionbirds.com</a> &nbsp;&middot;&nbsp; <a href="/workflow/">The Workflow</a> &nbsp;&middot;&nbsp; <a href="/contact-sheets/">Contact Sheets</a> &nbsp;&middot;&nbsp; <a href="/footage-levels/">Footage Levels</a> &nbsp;&middot;&nbsp; <a href="/waveform/">Waveform</a> &nbsp;&middot;&nbsp; &copy; 2026
-  <div style="margin-top:4px;font-size:12px"><a href="https://coltonland.com/privacy/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;min-height:44px;text-decoration:underline;text-underline-offset:3px">Privacy</a></div>
+  <!-- FOOTER-NAV:START -->
+  <nav class="fnav" aria-label="Every page">
+    <a href="/">Home</a>
+    <a href="/workflow/">The Workflow</a>
+    <a href="/contact-sheets/">Contact Sheets</a>
+    <a href="/footage-levels/">Footage Levels</a>
+    <a href="/light-and-lens/" aria-current="page">Light &amp; Lens</a>
+    <a href="/waveform/">Reading the Waveform</a>
+    <a href="/player/">Player (beta)</a>
+    <a href="/privacy/">App Privacy</a>
+  </nav>
+  <div class="fmeta">
+    <a href="https://vimeo.com/coltonphotography" target="_blank" rel="noopener">Vimeo</a>
+    <a href="https://coltonland.com/privacy/" target="_blank" rel="noopener">Site Privacy</a>
+    <span>Built by Colton with Claude</span>
+    <span>&copy; 2026</span>
+  </div>
+  <!-- FOOTER-NAV:END -->
 </footer>
 
 <script>

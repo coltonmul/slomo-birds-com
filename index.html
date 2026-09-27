@@ -128,6 +128,17 @@ h1 .sun { color: var(--sun); }
 .footer details p { margin-top: 6px; color: var(--dust-text); }
 @media (max-width: 560px) { .hero-content { padding: 0 18px 40px; } .scroll-cue { display: none; } .films { padding: 14px 16px 20px; } .hero-toggle { top: 14px; right: 14px; padding: 10px 13px; } .annot { letter-spacing: 0.08em; } .footer { padding: 30px 18px; } .footer-links { letter-spacing: 0.06em; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
+/* FOOTER-NAV:START  one footer, every page of the site on it (2026-09-26) */
+.fnav,.fmeta{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 22px;max-width:1060px;margin:0 auto;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+/* 12px top and bottom keeps every link clear of whatever sits above the nav by more
+   than the 8px minimum separation, including the player's own "Built by" line. */
+.fnav{margin-top:12px}
+.fmeta{margin-top:12px}
+.fnav a,.fmeta a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;margin:0;color:inherit;text-decoration:none}
+.fnav a:hover,.fmeta a:hover{color:#E8A13A}
+.fnav a[aria-current]{color:#E8A13A}
+.fmeta span{display:inline-flex;align-items:center;min-height:44px}
+/* FOOTER-NAV:END */
 </style>
 </head>
 <body>
@@ -219,21 +230,31 @@ h1 .sun { color: var(--sun); }
 <footer class="footer">
   <div class="big">The birds refuse<br>to be <span>rushed.</span></div>
   <div class="footer-links">
+    <!-- FOOTER-NAV:START -->
+  <nav class="fnav" aria-label="Every page">
+    <a href="/" aria-current="page">Home</a>
+    <a href="/workflow/">The Workflow</a>
+    <a href="/contact-sheets/">Contact Sheets</a>
+    <a href="/footage-levels/">Footage Levels</a>
+    <a href="/light-and-lens/">Light &amp; Lens</a>
+    <a href="/waveform/">Reading the Waveform</a>
+    <a href="/player/">Player (beta)</a>
+    <a href="/privacy/">App Privacy</a>
+  </nav>
+  <div class="fmeta">
     <a href="https://vimeo.com/coltonphotography" target="_blank" rel="noopener">Vimeo</a>
-    &nbsp;&middot;&nbsp; <a href="/workflow/">The Workflow</a>
-    &nbsp;&middot;&nbsp; <a href="/contact-sheets/">Contact Sheets</a>
-    &nbsp;&middot;&nbsp; <a href="/footage-levels/">Footage Levels</a>
-    &nbsp;&middot;&nbsp; <a href="/light-and-lens/">Light &amp; Lens Calculator</a>
-    &nbsp;&middot;&nbsp; <a href="/waveform/">Reading the Waveform</a>
-    &nbsp;&middot;&nbsp; <a href="/player/">Player (beta)</a>
-    &nbsp;&middot;&nbsp; slowmotionbirds.com &nbsp;&middot;&nbsp; &copy; 2026
-  <div class="stamp">v1.2.0 &middot; Updated Sat / 2026-09-26 / 8:22 PM CT</div>
+    <a href="https://coltonland.com/privacy/" target="_blank" rel="noopener">Site Privacy</a>
+    <span>Built by Colton with Claude</span>
+    <span>&copy; 2026</span>
+  </div>
+  <!-- FOOTER-NAV:END -->
+  <div class="stamp">v1.3.0 &middot; Updated Sat / 2026-09-26 / 8:49 PM CT </div>
   <details><summary>Changelog</summary>
+    <p>v1.3.0 (2026-09-26, 8:49 PM): The footer now lists every page of the site, on every page, with the one you are on marked. Each page used to carry its own partial list, and the published contact sheets and the player carried almost none, so the deeper pages were only findable if you already knew they were there.</p>
     <p>v1.2.0 (2026-09-26, 8:22 PM): A fifth field note, Reading the Waveform, on the Field Notes grid and in the footer: how to read the scope for bird exposure, with the IRE bands measured off real frames from the archive.</p>
     <p>v1.1.0 (2026-09-25, 3:01 PM): A Field Notes section under the films, with a button up top that jumps to it, so the workflow, contact sheets, footage levels and the light and lens calculator are no longer hiding in the footer. A pasted link to the site now unfurls into a photo card of the hummingbird instead of a text card, and every field notes page has its own.</p>
     <p>v1.0.0: The homepage before it carried a version: the hummingbird hero and the five films.</p>
   </details>
-  <div style="margin-top:4px;font-size:12px"><a href="https://coltonland.com/privacy/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;min-height:44px;text-decoration:underline;text-underline-offset:3px">Privacy</a></div>
   </div>
 </footer>
 
