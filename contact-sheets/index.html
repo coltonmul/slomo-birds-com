@@ -45,23 +45,20 @@ details .in{padding:0 18px 16px}
 .footer a:hover{color:var(--sun)}
 @media (max-width:560px){.wrap{padding:44px 18px 30px}.annot{letter-spacing:.08em}.footer{padding-left:18px;padding-right:18px;letter-spacing:.06em}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
-/* FOOTER-NAV:START  one footer, every page of the site on it (2026-09-26) */
-.fnav,.fmeta{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 22px;max-width:1060px;margin:0 auto;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
-/* 12px top and bottom keeps every link clear of whatever sits above the nav by more
-   than the 8px minimum separation, including the player's own "Built by" line. */
+/* FOOTER-NAV:START  every page of the site, on every page of the site (2026-09-26) */
+.fnav,.fmeta{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 22px;max-width:1060px;margin:0 auto;font-family:'DM Mono',ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;line-height:1.3}
 .fnav{margin-top:12px}
 .fmeta{margin-top:12px}
-.fnav a,.fmeta a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;margin:0;color:inherit;text-decoration:none}
+.fnav a,.fmeta a,.fmeta span{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;margin:0;color:#ACA595;text-decoration:none}
 .fnav a:hover,.fmeta a:hover{color:#E8A13A}
 .fnav a[aria-current]{color:#E8A13A}
-.fmeta span{display:inline-flex;align-items:center;min-height:44px}
 /* FOOTER-NAV:END */
 </style></head><body>
 <div class="wrap">
   <div class="annot"><a href="/">&larr; slowmotionbirds.com</a> &nbsp;&middot;&nbsp; field notes</div>
   <h1>Contact<br><span class="sun">Sheets.</span></h1>
   <p class="lede">One visual proof sheet per analyzed footage session, named exactly by its archive folder: every clip's reference frame, every detected event with its peak-action thumbnail, scores and timecodes. This is the calibration record: reviewing these sheets over time is how the grading rules get corrected, refined, and taught what this yard calls interesting.</p>
-  <p class="stamp">v1.2.0 &middot; 4 sessions published &middot; Updated Sat / 2026-09-26 / 8:50 PM CT</p>
+  <p class="stamp">v1.2.0 &middot; 4 sessions published &middot; Updated Sat / 2026-09-26 / 10:42 PM CT</p>
   <a class='card' href='/contact-sheets/2026-08-10-north-wing-double-feeder/'><div class='nm'>2026 08 10 North Wing Double Feeder</div><div class='mt'>61 clips &middot; 395 events &middot; published 2026-08-11</div></a><a class='card' href='/contact-sheets/2024-12-31-overcast-tree-feeder/'><div class='nm'>2024 12 31 Overcast Tree Feeder</div><div class='mt'>33 clips &middot; 152 events &middot; published 2026-08-09</div></a><a class='card' href='/contact-sheets/2024-12-30-afternoon-window-double-feeder-batch-2/'><div class='nm'>2024 12 30 Afternoon Window Double Feeder Batch 2</div><div class='mt'>83 clips &middot; 72 events &middot; published 2026-08-09</div></a><a class='card' href='/contact-sheets/2024-12-30-afternoon-window-double-feeder/'><div class='nm'>2024 12 30 Afternoon Window Double Feeder</div><div class='mt'>55 clips &middot; 69 events &middot; published 2026-08-09</div></a>
   <details>
     <summary>Changelog</summary>
@@ -90,7 +87,6 @@ details .in{padding:0 18px 16px}
     <a href="https://vimeo.com/coltonphotography" target="_blank" rel="noopener">Vimeo</a>
     <a href="https://coltonland.com/privacy/" target="_blank" rel="noopener">Site Privacy</a>
     <span>Built by Colton with Claude</span>
-    <span>&copy; 2026</span>
   </div>
   <!-- FOOTER-NAV:END -->
 </footer>
