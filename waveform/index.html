@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading the Waveform &middot; Slow Motion Birds</title>
+<meta name="description" content="How to read the waveform for bird exposure in S-Log3 on a Sony a7S III: the IRE bands, where each plumage colour actually lands, and why a luma scope reads a cardinal a stop low. Measured from this yard's own footage.">
+<meta property="og:title" content="Reading the Waveform &middot; Slow Motion Birds">
+<meta property="og:description" content="The IRE bands for bird exposure in S-Log3, measured off real frames from this yard.">
+<meta property="og:image" content="https://slowmotionbirds.com/waveform/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A cardinal on a tray feeder above a luma waveform, under the words Reading the Waveform.">
+<meta property="og:url" content="https://slowmotionbirds.com/waveform/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://slowmotionbirds.com/waveform/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-size='22'>🐦</text></svg>">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Colours are the site's measured set (2026-09-20). --dust is borders only (6.19 on the page);
+   --dust-text is the text-safe sibling at 7.89 on the page, 7.47 on panels. Nothing under 12px.
+   Band fills carry no meaning on their own: every band is also named in words next to it. */
+:root { --pitch:#0C0E10; --linen:#F0EBE0; --dust:#9A917E; --dust-text:#ACA595; --sun:#E8A13A; --line:#23262B; --edge:#6E6858; --panel:#12151A; --ok:#8FBF7F; --warn:#E6C87E; --bad:#C0574F; --bad-fill:#A6433B; --deep:#B76A48; }
+html { background: var(--pitch); }
+body { font-family:'DM Sans',sans-serif; font-weight:300; color:var(--linen); background:var(--pitch); line-height:1.6; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline:2px solid var(--sun); outline-offset:3px; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 60px 30px 40px; }
+.annot { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--dust-text); margin-bottom:4px; }
+.annot a { color: var(--sun); display:inline-flex; align-items:center; min-height:44px; margin:4px 0; }
+h1 { font-family:'Big Shoulders Display',sans-serif; font-weight:900; font-size:clamp(44px,8vw,84px); line-height:.88; text-transform:uppercase; }
+h1 .sun { color: var(--sun); }
+.lede { max-width:660px; margin-top:16px; font-size:17px; color:#CFC8B8; }
+.stamp { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--dust-text); margin-top:8px; }
+h2 { font-family:'Big Shoulders Display',sans-serif; font-weight:700; font-size:clamp(22px,3vw,32px); text-transform:uppercase; margin:52px 0 14px; }
+h3 { font-size:17px; font-weight:500; margin:22px 0 6px; }
+p { max-width: 660px; margin: 0 0 12px; font-size:16px; }
+p a, li a { text-decoration:underline; text-underline-offset:3px; }
+.muted { color: var(--dust-text); font-size: 14px; }
+.panel { border:0.5px solid var(--line); background:var(--panel); border-radius:4px; padding:20px; }
+.panel h4 { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--dust-text); margin-bottom:14px; }
+label { display:block; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust-text); margin:14px 0 5px; }
+select, input[type=number] { width:100%; background:var(--pitch); color:var(--linen); border:1px solid var(--edge); border-radius:3px; padding:9px 10px; font-family:'DM Mono',monospace; font-size:16px; min-height:44px; }
+table { border-collapse:collapse; width:100%; font-size:13px; margin-top:10px; }
+th { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust-text); text-align:left; padding:8px 10px 8px 0; border-bottom:0.5px solid var(--line); white-space:nowrap; }
+td { padding:9px 10px 9px 0; border-bottom:0.5px solid var(--line); vertical-align:top; font-family:'DM Mono',monospace; font-size:13px; }
+.tablewrap { overflow-x:auto; }
+ol, ul { max-width:660px; padding-left:22px; font-size:16px; }
+li { margin-bottom:8px; }
+.chip { display:inline-block; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; border-radius:2px; padding:3px 8px; vertical-align:middle; }
+.c-ok { color:var(--pitch); background:var(--ok); } .c-warn { color:var(--pitch); background:var(--warn); } .c-bad { color:var(--linen); background:var(--bad-fill); }
+
+figure { margin:26px 0 30px; }
+figure img { width:100%; height:auto; display:block; border:0.5px solid var(--line); border-radius:4px; }
+figcaption { font-size:14px; color:var(--dust-text); margin-top:10px; max-width:720px; }
+
+/* the ruler: IRE bands drawn as a column, each one named in words */
+.ruler { display:grid; grid-template-columns: 78px 26px 1fr; gap:0 14px; margin:24px 0 8px; max-width:720px; }
+.ruler .tickcol, .ruler .barcol, .ruler .txtcol { position:relative; }
+.ruler .barcol { border-radius:3px; overflow:hidden; }
+.rb { position:absolute; left:0; right:0; }
+.rt { position:absolute; right:0; font-family:'DM Mono',monospace; font-size:13px; color:var(--dust-text); transform:translateY(-50%); white-space:nowrap; }
+.rl { position:absolute; left:0; right:0; padding-left:2px; }
+.rl b { display:block; font-family:'DM Mono',monospace; font-size:13px; font-weight:500; color:var(--linen); letter-spacing:.04em; }
+.rl span { display:block; font-size:13px; color:var(--dust-text); line-height:1.35; }
+.anchor { position:absolute; left:0; right:0; border-top:1px dashed var(--sun); }
+.anchor em { position:absolute; right:2px; top:-19px; font-family:'DM Mono',monospace; font-size:12px; font-style:normal; color:var(--sun); background:var(--pitch); padding:0 4px; }
+
+/* where each bird lands */
+.birds { margin-top:18px; max-width:760px; }
+.brow { display:grid; grid-template-columns:168px 1fr; gap:12px; align-items:center; margin-bottom:9px; }
+.bname { font-family:'DM Mono',monospace; font-size:13px; color:var(--linen); }
+.bname i { display:block; font-style:normal; font-size:12px; color:var(--dust-text); }
+.btrack { position:relative; height:26px; background:var(--panel); border:0.5px solid var(--line); border-radius:3px; }
+.bspan { position:absolute; top:4px; bottom:4px; border-radius:2px; }
+.bmed { position:absolute; top:1px; bottom:1px; width:2px; background:var(--linen); }
+.bval { position:absolute; top:50%; transform:translateY(-50%); font-family:'DM Mono',monospace; font-size:12px; color:var(--dust-text); padding-left:7px; }
+.bscale { display:grid; grid-template-columns:168px 1fr; gap:12px; margin-top:6px; }
+.bscale div:last-child { position:relative; height:18px; }
+.bscale span { position:absolute; transform:translateX(-50%); font-family:'DM Mono',monospace; font-size:12px; color:var(--dust-text); }
+
+.cols { display:grid; grid-template-columns: 340px 1fr; gap:18px; margin-top:24px; }
+@media (max-width:820px){ .cols { grid-template-columns:1fr; } .brow, .bscale { grid-template-columns:120px 1fr; } }
+.readout { display:grid; gap:10px; align-content:start; }
+.stat { border:0.5px solid var(--line); border-radius:4px; padding:14px 16px; background:var(--pitch); }
+.stat .k { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust-text); margin-bottom:5px; }
+.stat .v { font-family:'Big Shoulders Display',sans-serif; font-weight:700; font-size:26px; line-height:1.15; }
+.stat .n { font-size:14px; color:#CFC8B8; margin-top:4px; }
+
+details { border:0.5px solid var(--line); border-radius:4px; margin-top:30px; }
+summary { cursor:pointer; padding:14px 18px; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--dust-text); }
+details .in { padding: 0 18px 16px; }
+.footer { border-top:0.5px solid var(--line); margin-top:56px; padding:22px 30px; text-align:center; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust-text); text-wrap:balance; }
+.footer a { display:inline-flex; align-items:center; justify-content:center; min-width:44px; min-height:44px; margin:4px 0; }
+.footer a:hover { color: var(--sun); }
+@media (max-width:560px){ .wrap{padding:44px 18px 30px;} .annot{letter-spacing:.08em;} .footer{padding-left:18px; padding-right:18px; letter-spacing:.06em;} }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="annot"><a href="/">&larr; slowmotionbirds.com</a> &nbsp;&middot;&nbsp; field notes</div>
+  <h1>Reading the<br><span class="sun">Waveform.</span></h1>
+  <p class="lede">The scope on the monitor answers one question well: is the bird exposed. It does not answer whether the picture looks nice, and it will quietly lie to you about a cardinal. Every number on this page was measured off real frames from this yard, shot on the a7S III in S-Log3, not taken from a chart.</p>
+  <p class="stamp">v1.0.0 &middot; Updated Sat / 2026-09-26 / 8:22 PM CT &middot; measured from 2024 12 31 Overcast Tree Feeder</p>
+
+  <h2>It is a waveform, not a histogram</h2>
+  <p>A histogram counts pixels by brightness and throws away where they were. A waveform keeps the position: the scope is as wide as the frame, and each column of the scope is the same column of the picture, stood on end. Brightness runs up the side in IRE, 0 at the bottom, 100 at the top.</p>
+  <p>That is what makes it useful for birds. Find the bird in the frame, note how far across it sits, then look straight down at that part of the scope. The trace at that column is the bird. Everything to the left and right of it is the yard, and you can ignore it.</p>
+
+  <figure>
+    <img src="fig-cardinal.jpg" width="1600" height="1664" loading="lazy" alt="A cardinal on a tray feeder above its own luma waveform. The bird is boxed in the frame, and dashed lines drop from the box edges to a matching box on the waveform sitting at 30 IRE, while the rest of the trace sits near 44.">
+    <figcaption>The same frame twice. The box on the scope covers exactly the columns the cardinal occupies, and the dashed lines tie them together. The bird's trace sits at 30 IRE while the grass and trees around it sit near 44, which is the whole reason a frame can look correctly exposed while the subject is not.</figcaption>
+  </figure>
+
+  <h2>The ruler</h2>
+  <p>S-Log3 puts its reference points in fixed places, and they never move with ISO or lens. Learn these four and the scope becomes readable:</p>
+  <p><b>41 IRE is middle grey.</b> An 18 percent grey card sits there. <b>61 IRE is a white card</b> at 90 percent reflectance. <b>94 IRE is the end</b>, where this camera clips and nothing comes back. <b>12 IRE is the floor of the useful curve</b>, exactly four stops under middle grey, below which S-Log3 stops being a log curve at all.</p>
+  <p>Between them, the conversion is simple enough to do in your head: <b>one stop is about 9 IRE.</b> A bird at 32 IRE is one stop under middle grey. A bird at 50 is one stop over. That single number turns the scope into an exposure meter.</p>
+
+  <div class="ruler" id="ruler" aria-hidden="true">
+    <div class="tickcol" id="rTicks"></div>
+    <div class="barcol" id="rBar"></div>
+    <div class="txtcol" id="rText"></div>
+  </div>
+  <p class="muted" id="rulerText" style="max-width:720px;margin-top:14px"></p>
+
+  <h2>Why the scope lies about a cardinal</h2>
+  <p>Luma is not brightness. It is a weighted mix of the three colour channels, and the weights are lopsided: <b>71 percent green, 21 percent red, 7 percent blue.</b> Green carries almost all of it. So a bird whose colour lives almost entirely in the red channel reads low on a luma scope, not because it is underexposed, but because the scope is mostly measuring a channel that bird does not have much of.</p>
+  <p>Measured on this cardinal: the luma trace sits at 30 IRE. The red channel sits at 41, which is middle grey exactly. The bird was correctly exposed the whole time.</p>
+
+  <figure>
+    <img src="fig-parade.jpg" width="1600" height="1664" loading="lazy" alt="The same cardinal frame with an RGB waveform instead of a luma one. A distinct red cloud floats well above the main trace at the cardinal's columns, and marker lines show the red channel at 41 IRE, green at 27 and blue at 24.">
+    <figcaption>The same frame with all three channels drawn. That red cloud at the cardinal's columns is the part a luma scope averages away. Red sits at 41 IRE, green at 27, blue at 24. Open up a stop to drag the luma trace up to 41 and the red channel goes to 52, spending real highlight headroom to fix a problem the bird never had.</figcaption>
+  </figure>
+
+  <p>So the rule for a strongly coloured bird is to judge it on the channel it actually lives in. On the a7S III that means switching the scope to RGB rather than luma when a cardinal, a bluebird or a goldfinch is the subject. On a luma-only scope, add roughly <b>11 IRE to what you read on a red bird</b> and about <b>8 IRE on a blue one</b> to get to the channel that matters.</p>
+
+  <h2>Where the birds actually land</h2>
+  <p>All of these came out of one session, so the exposure is identical across every row and the only thing changing is the bird. The bar is the middle 90 percent of that plumage, and the white line is its median.</p>
+
+  <div class="birds" id="birds"></div>
+  <p class="muted" style="margin-top:14px">Luma values, as a luma scope would show them. The right hand column is the channel that plumage actually lives in, which is the number worth exposing to.</p>
+
+  <div class="tablewrap"><table id="birdtable"></table></div>
+
+  <h2>Check a reading</h2>
+  <p>Read the bird off the scope, tell this what it was, and it will say whether to leave it alone.</p>
+
+  <div class="cols">
+    <div class="panel">
+      <h4>What is in the box</h4>
+      <label for="subject">The bird</label>
+      <select id="subject">
+        <option value="red">Cardinal, or any strongly red bird</option>
+        <option value="blue">Blue jay, bluebird, indigo bunting</option>
+        <option value="brown">Brown or grey songbird (finch, sparrow, titmouse)</option>
+        <option value="pied">Black and white (woodpecker, chickadee)</option>
+        <option value="dark">Dark glossy (starling, grackle, crow)</option>
+        <option value="pale">White or pale (dove, egret, snow behind)</option>
+        <option value="yellow">Yellow (goldfinch in summer)</option>
+      </select>
+      <label for="trace">Which trace you read</label>
+      <select id="trace">
+        <option value="Y">Luma only (the plain white scope)</option>
+        <option value="dom">RGB, the bird's own channel</option>
+      </select>
+      <label for="reading">What it read, in IRE</label>
+      <input type="number" id="reading" value="30" min="0" max="109" step="1">
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="k">Verdict</div><div class="v" id="vV"></div><div class="n" id="vN"></div></div>
+      <div class="stat"><div class="k">Where that sits</div><div class="v" id="sV"></div><div class="n" id="sN"></div></div>
+      <div class="stat"><div class="k">What to do</div><div class="v" id="aV"></div><div class="n" id="aN"></div></div>
+    </div>
+  </div>
+
+  <h2>Is that black supposed to be black</h2>
+  <p>This is the harder question, and the scope answers it by shape rather than by height. A subject that is genuinely dark still has structure on the scope: the trace wanders, it has thickness, there are lighter and darker parts of it. A subject that has been crushed is flat. It lies along the bottom in a straight line because every pixel hit the same floor, and no amount of lifting in the grade brings back a difference that was never recorded.</p>
+
+  <figure>
+    <img src="fig-starling.jpg" width="1600" height="1664" loading="lazy" alt="A starling perched on the rim of a tray feeder above its waveform. The bird's dark plumage box sits around 24 IRE, well above the bottom of the scope, and the trace inside it still has visible thickness and variation.">
+    <figcaption>A starling is meant to be the darkest thing in the yard, and at 24 IRE it is, without being in trouble. The test is not how low it sits, it is whether the trace still has shape down there. This one does.</figcaption>
+  </figure>
+
+  <p>The out of focus shapes behind the feeders are the same question. A leaf shadow and a dark car parked in the shade look identical in the viewfinder, and they look identical on the scope too, because the scope does not know what things are. What it can tell you is whether that dark region is still recording detail or has bottomed out. If the background trace sits at 20 IRE with texture in it, it is a real dark thing and it will grade. If it is a flat line at the very bottom, it is gone, and the only question left is whether you mind.</p>
+  <p>Practically, none of that should change your exposure. Expose for the bird. Let the background land where it lands. A yard that goes properly dark behind a well exposed bird is a good picture, and a yard held up at the cost of a blown feeder roof is not.</p>
+
+  <figure>
+    <img src="fig-woodpecker.jpg" width="1600" height="1664" loading="lazy" alt="A downy woodpecker on a feeder above its waveform, with two boxes marking its black plumage at 19 IRE and its white plumage at 49 IRE.">
+    <figcaption>The hardest bird at this feeder. A downy woodpecker carries near black and near white a couple of inches apart, a 30 IRE spread on one small subject, wider than the entire background of the shot. There is no exposure that centres both, which is the case for putting the white feathers just under 55 and letting the black go where it goes.</figcaption>
+  </figure>
+
+  <h2>What ISO changes, and what it does not</h2>
+  <p>ISO does not move where the bird sits on the scope. Exposure does that. What ISO decides is how much of the picture is still information rather than noise once you lift it in the grade, which is why 30 IRE is comfortable at one ISO and ugly at another.</p>
+  <p>This camera has two base sensitivities in S-Log3, <b>640 and 12,800</b>, and the second one is not a compromise. It is a genuine second starting point, which is the whole reason the a7S III is the right body for a feeder in shade.</p>
+
+  <div class="tablewrap"><table>
+    <tr><th>ISO in S-Log3</th><th>Measured range</th><th>What it means here</th></tr>
+    <tr><td>640</td><td>12.4 stops</td><td>The cleanest setting. Bright overcast or better, and rarely available at 1/1000 under a tree.</td></tr>
+    <tr><td>2,000</td><td>better than 12,800</td><td>Fine. The gap between the bases is not uniformly bad and the low end of it is good.</td></tr>
+    <tr><td>6,400 to 10,000</td><td>worse than 12,800</td><td>The one range worth stepping over. Pushed hard off the low base, just short of the switch.</td></tr>
+    <tr><td>12,800</td><td>12.1 stops</td><td>The second base. Effectively free range, and where most feeder work belongs.</td></tr>
+    <tr><td>16,000</td><td>11.9 stops</td><td>A fifth of a stop off 12,800. Worth it whenever it buys the shutter speed.</td></tr>
+  </table></div>
+  <p class="muted">Lab figures from CineD's Xyla 21 measurements of this body at SNR 2. The comparison of the intermediate ISOs is derived from measured sensor data rather than published for video, so treat the 6,400 to 10,000 trough as a shape to avoid rather than a precise cliff. Note also that this camera applies noise reduction that cannot be switched off, which flatters the noise floor in exactly these tests.</p>
+  <p>The practical version: <b>at 12,800 or 16,000, a bird sitting anywhere above about 25 IRE lifts cleanly.</b> Below 20 it starts costing something, and the cost lands first in the red channel, which is the noisiest one and also the one a cardinal is made of.</p>
+
+  <h2>At the camera</h2>
+  <ol>
+    <li>Put the scope on the monitor and leave it there. It is worth more than zebras because it shows the whole frame at once.</li>
+    <li>Find the bird's column, read straight down. Ignore the rest of the trace.</li>
+    <li><b>Aim for the bird's own channel at 41 IRE</b>, which is middle grey. On luma alone, a red bird landing near 30 and a blue bird near 40 are both already right.</li>
+    <li>Check the top of the trace for anything touching 94. That is the only part of the picture that cannot be recovered, and on this feeder it is usually the metal roof or a bright sky gap, not the bird.</li>
+    <li>If the bird needs more light, take it from aperture first. Shutter is holding the wings still and ISO is already sitting on a base.</li>
+    <li>Do not expose brighter than the reference just because it is log. Sony's own guidance for this body is that no offset is needed, and every stop you add is a stop off the top.</li>
+  </ol>
+
+  <p class="muted" style="margin-top:22px">Companion page: the <a href="/light-and-lens/">Light and Lens calculator</a> solves the other half, which is what aperture the feeder needs and what shutter the light affords.</p>
+
+  <details>
+    <summary>How these numbers were measured</summary>
+    <div class="in">
+      <p class="muted">Every figure is one real frame from <b>2024 12 31 Overcast Tree Feeder</b>, decoded from the original 4K 120p files at 10 bit, with the waveform generated from the source clip in its native YUV rather than redrawn from a screenshot. Luma is read as code values and converted with IRE = (CV &minus; 64) / 876 &times; 100, which reproduces Sony's own published reference points exactly: code value 95 for black at 3.5 IRE, 420 for 18 percent grey at 41, and 598 for 90 percent white at 61.</p>
+      <p class="muted">Plumage was isolated by chroma rather than by hand, keeping only pixels whose hue and saturation match the bird and only where those pixels cluster densely, which keeps warm seed hulls and tinted feeder wood out of the cardinal's numbers. Channel values come from converting the same pixels back to R, G and B in the identical code value space, so every number on this page sits on one ruler. The per channel figures held to within half an IRE across two independent frames of different cardinals.</p>
+      <p class="muted">One stop equals log10(2) &times; 261.5 = 78.7 code values = 8.99 IRE in the log part of the curve, which is where the "about 9 IRE" shorthand comes from. The clipping point of 94 IRE works out to 6.01 stops above middle grey.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Changelog</summary>
+    <div class="in">
+      <p class="muted">v1.0.0 (2026-09-26, 8:22 PM): First edition. The waveform explained for bird exposure, the IRE band ruler with S-Log3's four anchors, the luma versus channel finding with an RGB parade of a real cardinal, measured landing bands for seven kinds of plumage, a reading checker, the dark subject question, and the ISO table.</p>
+    </div>
+  </details>
+</div>
+<footer class="footer">
+  <a href="/">slowmotionbirds.com</a> &nbsp;&middot;&nbsp; <a href="/workflow/">The Workflow</a> &nbsp;&middot;&nbsp; <a href="/contact-sheets/">Contact Sheets</a> &nbsp;&middot;&nbsp; <a href="/footage-levels/">Footage Levels</a> &nbsp;&middot;&nbsp; <a href="/light-and-lens/">Light &amp; Lens</a> &nbsp;&middot;&nbsp; &copy; 2026
+  <div style="margin-top:4px;font-size:12px"><a href="https://coltonland.com/privacy/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;min-height:44px;text-decoration:underline;text-underline-offset:3px">Privacy</a></div>
+</footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var GREY=40.6, WHITE=61.0, CLIP=94.0, TOE=12.2, PERSTOP=8.99;
+
+  /* ---- the ruler -------------------------------------------------------- */
+  var LO=0, HI=104, H=560;
+  var BANDS=[
+    {a:94, b:HI, c:'var(--bad-fill)',  t:'Clipped',        d:'Past the end of the curve. Nothing here comes back, at any ISO, in any grade.'},
+    {a:88, b:94, c:'var(--deep)',      t:'Last stop',      d:'The final stop before clipping. Fine for a specular glint on wet metal, not for feathers.'},
+    {a:76, b:88, c:'var(--warn)',      t:'Watch it',       d:'Bright, still full detail, but the roll off starts compressing tones together up here.'},
+    {a:58, b:76, c:'#96B98C',          t:'Bright, fine',   d:'Sky gaps, snow, white feathers. Nothing wrong with living here.'},
+    {a:32, b:58, c:'var(--ok)',        t:'The pocket',     d:'One stop either side of middle grey. Put the bird here and nothing else matters much.'},
+    {a:23, b:32, c:'var(--warn)',      t:'Thin',           d:'One to two stops under. Fine on 12,800, and normal for a red bird read on luma.'},
+    {a:TOE,b:23, c:'var(--deep)',      t:'Deep',           d:'Two to three stops under. Lifts, but the red channel gets noisy first.'},
+    {a:LO, b:TOE,c:'var(--bad-fill)',  t:'Off the curve',  d:'Below four stops under, where S-Log3 stops being log. Detail here was never really recorded.'}
+  ];
+  function y(v){ return (HI-v)/(HI-LO)*H; }
+  var ANCHORS=[[GREY,'18% grey'],[WHITE,'90% white'],[CLIP,'clips']];
+  var bar='', txt='', tk='';
+
+  // Labels are placed top down and pushed past whatever was placed above them, so a thin band
+  // like the 88 to 94 one still gets its two lines instead of landing on its neighbour.
+  var floorY=0;
+  BANDS.forEach(function(b){
+    var top=y(b.b), h=y(b.a)-y(b.b);
+    bar+='<div class="rb" style="top:'+top+'px;height:'+h+'px;background:'+b.c+'"></div>';
+    var at=Math.max(top+Math.max(0,(h-44)/2), floorY);
+    txt+='<div class="rl" style="top:'+at+'px"><b>'+b.t+'</b><span>'+b.d+'</span></div>';
+    floorY=at+46;
+  });
+
+  // A numeric tick within 4 IRE of an anchor is dropped: the anchor label says more and they
+  // would otherwise print on top of each other (40 against 18% grey, 60 against 90% white).
+  for(var v=0;v<=100;v+=20){
+    var clash=ANCHORS.some(function(a){ return Math.abs(a[0]-v)<4; });
+    if(!clash) tk+='<div class="rt" style="top:'+y(v)+'px">'+v+' IRE</div>';
+  }
+  ANCHORS.forEach(function(a){
+    bar+='<div class="anchor" style="top:'+y(a[0])+'px"></div>';
+    tk+='<div class="rt" style="top:'+y(a[0])+'px;color:var(--sun)">'+a[1]+' '+Math.round(a[0])+'</div>';
+  });
+  $('rBar').innerHTML=bar; $('rText').innerHTML=txt; $('rTicks').innerHTML=tk;
+  ['rTicks','rBar','rText'].forEach(function(id){ $(id).style.height=H+'px'; });
+  $('rulerText').textContent='Band edges are set by stops off middle grey, not by taste: the pocket is one stop either side of 41, the deep band bottoms out at four stops under where the curve leaves its log section, and the top edge is this camera’s measured clipping point at six stops over.';
+
+  /* ---- where the birds land (measured) ---------------------------------- */
+  var BIRDS=[
+    {k:'Cardinal',  s:'male, red plumage',   p5:25, p95:35, med:30, dom:'R', domv:41, note:'red channel'},
+    {k:'Blue jay',  s:'blue plumage',        p5:30, p95:53, med:40, dom:'B', domv:46, note:'blue channel'},
+    {k:'Mockingbird',s:'grey body',          p5:33, p95:53, med:44, dom:'Y', domv:44, note:'luma is honest'},
+    {k:'House finch',s:'brown, streaky',     p5:28, p95:48, med:36, dom:'Y', domv:36, note:'luma is honest'},
+    {k:'Starling',  s:'dark glossy',         p5:17, p95:31, med:24, dom:'Y', domv:24, note:'luma is honest'},
+    {k:'Woodpecker',s:'black feathers',      p5:13, p95:26, med:19, dom:'Y', domv:19, note:'luma is honest'},
+    {k:'Woodpecker',s:'white feathers',      p5:42, p95:55, med:49, dom:'Y', domv:49, note:'luma is honest'},
+    {k:'The yard',  s:'grass and trees',     p5:37, p95:53, med:44, dom:'Y', domv:44, note:'for reference'}
+  ];
+  function bandColour(v){
+    for(var i=0;i<BANDS.length;i++) if(v>=BANDS[i].a && v<BANDS[i].b) return BANDS[i].c;
+    return 'var(--dust)';
+  }
+  var html='';
+  BIRDS.forEach(function(b){
+    var l=b.p5/104*100, w=(b.p95-b.p5)/104*100, m=(b.med-b.p5)/(b.p95-b.p5)*100;
+    html+='<div class="brow"><div class="bname">'+b.k+'<i>'+b.s+'</i></div>'+
+      '<div class="btrack"><div class="bspan" style="left:'+l+'%;width:'+w+'%;background:'+bandColour(b.med)+';opacity:.85">'+
+      '<div class="bmed" style="left:'+m+'%"></div></div>'+
+      '<div class="bval" style="left:'+(l+w)+'%">'+b.med+'</div></div></div>';
+  });
+  var sc='<div class="bscale"><div></div><div>';
+  for(var t=0;t<=100;t+=20) sc+='<span style="left:'+(t/104*100)+'%">'+t+'</span>';
+  sc+='</div></div>';
+  $('birds').innerHTML=html+sc;
+
+  var rows='<tr><th>Plumage</th><th>Luma band</th><th>Median</th><th>Off middle grey</th><th>Its own channel</th></tr>';
+  BIRDS.forEach(function(b){
+    var st=(b.med-GREY)/PERSTOP;
+    rows+='<tr><td>'+b.k+', '+b.s+'</td><td>'+b.p5+' to '+b.p95+'</td><td>'+b.med+'</td><td>'+
+      (st>=0?'+':'')+st.toFixed(1)+' stops</td><td>'+
+      (b.dom==='Y' ? '<span class="muted">'+b.note+'</span>'
+                   : b.dom+' at '+b.domv+' <span class="muted">'+b.note+'</span>')+'</td></tr>';
+  });
+  $('birdtable').innerHTML=rows;
+
+  /* ---- the checker ------------------------------------------------------ */
+  var SUBJ={
+    red:   {n:'a cardinal', lumaLo:25, lumaHi:36, dom:'red',   offset:11, domLo:36, domHi:50},
+    blue:  {n:'a jay',      lumaLo:32, lumaHi:52, dom:'blue',  offset:8,  domLo:38, domHi:56},
+    brown: {n:'a finch',    lumaLo:30, lumaHi:50, dom:'luma',  offset:0,  domLo:30, domHi:50},
+    pied:  {n:'a woodpecker',lumaLo:16,lumaHi:55, dom:'luma',  offset:0,  domLo:16, domHi:55},
+    dark:  {n:'a starling', lumaLo:17, lumaHi:34, dom:'luma',  offset:0,  domLo:17, domHi:34},
+    pale:  {n:'a dove',     lumaLo:45, lumaHi:68, dom:'luma',  offset:0,  domLo:45, domHi:68},
+    yellow:{n:'a goldfinch',lumaLo:40, lumaHi:62, dom:'green', offset:3,  domLo:43, domHi:64}
+  };
+  function check(){
+    var s=SUBJ[$('subject').value], mode=$('trace').value, r=parseFloat($('reading').value);
+    if(isNaN(r)) r=0;
+    var lo = mode==='Y' ? s.lumaLo : s.domLo, hi = mode==='Y' ? s.lumaHi : s.domHi;
+    var stops=(r-GREY)/PERSTOP, chip, verdict, note, act, actN;
+
+    if(r>=CLIP){
+      chip='c-bad'; verdict='Clipped';
+      note='At '+r+' IRE this is past the camera’s 94 IRE ceiling. It is not recoverable in the grade.';
+      act='Close down '+(Math.max(0.3,(r-80)/PERSTOP)).toFixed(1)+' stops';
+      actN='Take it from aperture or add ND. Do not slow the shutter, it is holding the wings.';
+    } else if(r<TOE){
+      chip='c-bad'; verdict='Off the curve';
+      note='Below '+Math.round(TOE)+' IRE S-Log3 has left its log section. There is no tonal detail down here to lift.';
+      act='Open up '+((lo-r)/PERSTOP).toFixed(1)+' stops';
+      actN='Unless this is a silhouette you meant to shoot, in which case it is fine and you can ignore it.';
+    } else if(r<lo){
+      var need=(lo-r)/PERSTOP;
+      chip = need>1.2 ? 'c-bad' : 'c-warn';
+      verdict = need>1.2 ? 'Too dark' : 'A little thin';
+      note='For '+s.n+' read on '+(mode==='Y'?'luma':'its own channel')+', this wants to be '+lo+' to '+hi+' IRE.';
+      act='Open up '+need.toFixed(1)+' stops';
+      actN='Aperture first. At ISO 12,800 or 16,000 you can also just leave it and lift in the grade if it is above 25.';
+    } else if(r>hi){
+      var over=(r-hi)/PERSTOP;
+      chip = r>85 ? 'c-bad' : 'c-warn';
+      verdict = r>85 ? 'Nearly gone' : 'Hot';
+      note='For '+s.n+' this is above the '+lo+' to '+hi+' IRE band, and the highlights on it are compressing.';
+      act='Close down '+over.toFixed(1)+' stops';
+      actN='Check the brightest feathers rather than the body. White plumage is what clips first.';
+    } else {
+      chip='c-ok'; verdict='Leave it alone';
+      note='That is inside the '+lo+' to '+hi+' IRE band for '+s.n+'. It will grade.';
+      act='Nothing';
+      actN='Spend the attention on the top of the trace instead, and make sure nothing is touching 94.';
+    }
+
+    $('vV').innerHTML='<span class="chip '+chip+'">'+verdict+'</span>';
+    $('vN').textContent=note;
+    $('sV').textContent=(stops>=0?'+':'')+stops.toFixed(1)+' stops';
+    $('sN').textContent='Relative to middle grey at 41 IRE, at about 9 IRE per stop.'+
+      (mode==='Y' && s.offset>0 ? ' On luma this bird reads roughly '+s.offset+' IRE below its '+s.dom+' channel, which is expected and not a problem.' : '');
+    $('aV').textContent=act;
+    $('aN').textContent=actN;
+  }
+  ['subject','trace','reading'].forEach(function(id){
+    $(id).addEventListener('change',check); $(id).addEventListener('input',check);
+  });
+  check();
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ddef815fbbd44b34a2a5f96e9fe8a9ef"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
