@@ -122,6 +122,20 @@ h1 .sun { color: var(--sun); }
 .note:hover { border-color: var(--sun); transform: translateY(-2px); }
 @media (max-width: 700px) { .notes { padding: 30px 16px 10px; } .notes-grid { grid-template-columns: 1fr; gap: 14px; } }
 @media (prefers-reduced-motion: reduce) { .note:hover { transform: none; } }
+/* ===== SIGNUP: "keep me posted" (2026-09-26) ===== */
+.signup { max-width: 1300px; margin: 0 auto; padding: 40px 30px 10px; }
+.signup h2 { font-family: 'Big Shoulders Display', sans-serif; font-weight: 900; font-size: clamp(32px, 5vw, 56px); text-transform: uppercase; line-height: 0.9; }
+.signup h2 span { color: var(--sun); }
+.signup-intro { margin-top: 10px; font-size: 16px; color: var(--dust-text); max-width: 560px; }
+.signup-form { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; max-width: 520px; }
+.signup-form input[type=email] { flex: 1 1 260px; min-height: 48px; padding: 0 14px; font: 16px 'DM Sans', sans-serif; background: var(--pitch); border: 1px solid var(--dust); border-radius: 2px; color: var(--linen); }
+.signup-form input[type=email]::placeholder { color: var(--dust-text); }
+.signup-form input[type=email]:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }
+.signup .hp { position: absolute; left: -9999px; }
+.signup-status { margin-top: 10px; font-size: 14px; color: var(--dust-text); min-height: 20px; }
+.signup-fine { margin-top: 6px; font-size: 14px; color: var(--dust-text); max-width: 520px; }
+.signup-fine a { color: var(--sun); text-decoration: underline; text-underline-offset: 2px; }
+@media (max-width: 560px) { .signup { padding: 30px 16px 10px; } }
 .stamp { margin-top: 10px; }
 .footer details { margin: 6px auto 0; max-width: 640px; text-align: left; text-transform: none; letter-spacing: 0; font-family: 'DM Sans', sans-serif; font-size: 14px; }
 .footer summary { cursor: pointer; text-align: center; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; min-height: 44px; display: flex; align-items: center; justify-content: center; }
@@ -157,6 +171,7 @@ h1 .sun { color: var(--sun); }
       <a class="btn solid" href="#films">&#9660;&nbsp; Watch the films</a>
       <a class="btn ghost" href="#field-notes">Field notes</a>
       <a class="btn ghost" href="https://youtube.com/playlist?list=PLtzLM6Y0VXAKxsWHarwkJHpomJK1OL-5q" target="_blank" rel="noopener">Full library on YouTube &nearr;</a>
+      <a class="btn ghost" href="#signup">Keep me posted</a>
     </div>
   </div>
   <div class="scroll-cue">scroll for birds</div>
@@ -224,6 +239,22 @@ h1 .sun { color: var(--sun); }
   </div>
 </section>
 
+<!-- SIGNUP: the "keep me posted" list, shared with betterbirder.com (functions/api/updates.js
+     in the birding-buddy repo). This site's calls are cross-origin, so the fetch below is
+     absolute. -->
+<section class="signup" id="signup" aria-labelledby="signup-h">
+  <h2 id="signup-h">Keep <span>me posted.</span></h2>
+  <p class="signup-intro">New films, new field notes, the occasional big one. No spam, unsubscribe anytime.</p>
+  <form class="signup-form" id="signup-form" novalidate>
+    <label for="signup-email" class="film-meta" style="display:block;width:100%">Email</label>
+    <input id="signup-email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
+    <input class="hp" type="text" name="website" id="signup-website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="btn solid" type="submit">Keep me posted</button>
+  </form>
+  <p class="signup-status" id="signup-status" role="status" aria-live="polite"></p>
+  <p class="signup-fine">We keep only your email and when you signed up. Never sold or shared. <a href="/privacy/">Privacy</a>.</p>
+</section>
+
 <footer class="footer">
   <div class="big">The birds refuse<br>to be <span>rushed.</span></div>
   <div class="footer-links">
@@ -244,8 +275,9 @@ h1 .sun { color: var(--sun); }
     <span>Built by Colton with Claude</span>
   </div>
   <!-- FOOTER-NAV:END -->
-  <div class="stamp">v1.3.0 &middot; Updated Sat / 2026-09-26 / 8:49 PM CT </div>
+  <div class="stamp">v1.4.0 &middot; Updated Sun / 2026-09-27 / 4:10 AM CT </div>
   <details><summary>Changelog</summary>
+    <p>v1.4.0 (2026-09-27, 4:10 AM): A "keep me posted" email signup above the footer, linked from the hero. Shares the list betterbirder.com already uses; the privacy page now says so.</p>
     <p>v1.3.0 (2026-09-26, 8:49 PM): The footer now lists every page of the site, on every page, with the one you are on marked. Each page used to carry its own partial list, and the published contact sheets and the player carried almost none, so the deeper pages were only findable if you already knew they were there.</p>
     <p>v1.2.0 (2026-09-26, 8:22 PM): A fifth field note, Reading the Waveform, on the Field Notes grid and in the footer: how to read the scope for bird exposure, with the IRE bands measured off real frames from the archive.</p>
     <p>v1.1.0 (2026-09-25, 3:01 PM): A Field Notes section under the films, with a button up top that jumps to it, so the workflow, contact sheets, footage levels and the light and lens calculator are no longer hiding in the footer. A pasted link to the site now unfurls into a photo card of the hummingbird instead of a text card, and every field notes page has its own.</p>
@@ -357,6 +389,24 @@ h1 .sun { color: var(--sun); }
   var startAt = remembered();
   if (startAt !== 0) { show(startAt); }
   else { label(0); armLoopWindow(player = new Vimeo.Player(frame), SHOTS[0]); }
+})();
+</script>
+
+<script>
+(function () {
+  var f = document.getElementById('signup-form'), st = document.getElementById('signup-status');
+  if (!f) return;
+  f.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var email = f.email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { st.textContent = 'That email looks off. Check it and try again.'; f.email.focus(); return; }
+    st.textContent = 'Signing you up...';
+    fetch('https://betterbirder.com/api/updates', { method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email: email, interests: ['slow-motion-birds'], source: 'slowmotionbirds', website: f.website.value }) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { st.textContent = j.ok ? "You're on the list. Thanks!" : (j.error || 'Something went wrong. Try again in a minute.'); if (j.ok) f.reset(); })
+      .catch(function () { st.textContent = 'Could not reach the server. Try again in a minute.'; });
+  });
 })();
 </script>
 
