@@ -115,7 +115,7 @@ details .in { padding: 0 18px 16px; }
   <div class="annot"><a href="/">&larr; slowmotionbirds.com</a> &nbsp;&middot;&nbsp; field notes</div>
   <h1>Reading the<br><span class="sun">Waveform.</span></h1>
   <p class="lede">The scope on the monitor answers one question well: is the bird exposed. It does not answer whether the picture looks nice, and it will quietly lie to you about a cardinal. Every number on this page was measured off real frames from this yard, shot on the a7S III in S-Log3, not taken from a chart.</p>
-  <p class="stamp">v1.1.0 &middot; Updated Sat / 2026-09-26 / 8:49 PM CT &middot; measured from 2024 12 31 Overcast Tree Feeder</p>
+  <p class="stamp">v1.1.1 &middot; Updated Sat / 2026-10-03 / 7:02 PM CT &middot; measured from 2024 12 31 Overcast Tree Feeder</p>
 
   <h2>It is a waveform, not a histogram</h2>
   <p>A histogram counts pixels by brightness and throws away where they were. A waveform keeps the position: the scope is as wide as the frame, and each column of the scope is the same column of the picture, stood on end. Brightness runs up the side in IRE, 0 at the bottom, 100 at the top.</p>
@@ -234,6 +234,7 @@ details .in { padding: 0 18px 16px; }
   <details>
     <summary>How these numbers were measured</summary>
     <div class="in">
+      <p class="muted">v1.1.1 (2026-10-03, 7:02 PM): Footer: Built by Colton now links builtbycolton.com; 'with Claude' retired (global law 2.31.0). Nothing else on the page changed.</p>
       <p class="muted">v1.1.0 (2026-09-26, 8:49 PM): The footer now lists every page of the site, on every page, with the one you are on marked. Each page used to carry its own partial list, and the published contact sheets and the player carried almost none, so the deeper pages were only findable if you already knew they were there.</p>
       <p class="muted">Every figure is one real frame from <b>2024 12 31 Overcast Tree Feeder</b>, decoded from the original 4K 120p files at 10 bit, with the waveform generated from the source clip in its native YUV rather than redrawn from a screenshot. Luma is read as code values and converted with IRE = (CV &minus; 64) / 876 &times; 100, which reproduces Sony's own published reference points exactly: code value 95 for black at 3.5 IRE, 420 for 18 percent grey at 41, and 598 for 90 percent white at 61.</p>
       <p class="muted">Plumage was isolated by chroma rather than by hand, keeping only pixels whose hue and saturation match the bird and only where those pixels cluster densely, which keeps warm seed hulls and tinted feeder wood out of the cardinal's numbers. Channel values come from converting the same pixels back to R, G and B in the identical code value space, so every number on this page sits on one ruler. The per channel figures held to within half an IRE across two independent frames of different cardinals.</p>
@@ -263,7 +264,7 @@ details .in { padding: 0 18px 16px; }
   <div class="fmeta">
     <a href="https://vimeo.com/coltonphotography" target="_blank" rel="noopener">Vimeo</a>
     <a href="https://coltonland.com/privacy/" target="_blank" rel="noopener">Site Privacy</a>
-    <span>Built by Colton with Claude</span>
+    <a href="https://builtbycolton.com" target="_blank" rel="noopener">Built by Colton</a>
   </div>
   <!-- FOOTER-NAV:END -->
 </footer>
