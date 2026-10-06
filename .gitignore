@@ -1,0 +1,5 @@
+
+# backups left by edits (never committed)
+*.bak
+*.bak-*
+*.bak.*
