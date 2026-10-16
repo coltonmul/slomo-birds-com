@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>Slow Motion Birds: Player</title>
 <meta name="description" content="Pick a bird playlist, hit Release the Birds, cast it to the TV.">
@@ -17,7 +17,7 @@
 <meta name="twitter:image" content="https://slowmotionbirds.com/player/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400&family=Source+Sans+3:wght@600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-size='22'>🐦</text></svg>">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -147,8 +147,64 @@ label.opt.disabled { cursor: not-allowed; }
 .bar button[disabled]:hover { border-color: rgba(240,235,224,0.5); background: rgba(12,14,16,0.72); color: var(--linen); }
 .bar .lbl { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
 
+
+/* ===== NAMES AND FACTS (1.2.0, CWQ-301) =====
+   The switch on the picker: three radios drawn as one segmented control. Edges are linen at 50 percent,
+   4.6 to 1 on the page (3 to 1 floor for control edges); the chosen one is pitch on sun, 8.83. */
+.seg { display: flex; flex-wrap: wrap; gap: 8px; }
+.seg label { position: relative; cursor: pointer; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg span {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px;
+  border: 1px solid rgba(240,235,224,0.5); border-radius: 3px; font-size: 16px; color: var(--linen);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.seg label:hover span { border-color: var(--sun); }
+.seg input:checked + span { background: var(--sun); border-color: var(--sun); color: var(--pitch); }
+.seg input:focus-visible + span { outline: 2px solid var(--sun); outline-offset: 3px; }
+.p-note { font-size: 14px; color: #C9C2B2; margin-top: 10px; max-width: 560px; }
+
+/* The cards: house style smb-card-1 (Projects/Slow Motion Birds/OVERLAY-LAYER.md), sizes for a 1080 high frame
+   times --u, never under 12px. --u fits the whole frame inside the screen, so a card never runs off a narrow one.
+   They sit over the video and under the black fade between films, inside the phone's safe area. */
+.cards {
+  position: absolute; z-index: 1; pointer-events: none; overflow: hidden; --u: 1px; --fw: 1920px; --bar-h: 0px;
+  top: env(safe-area-inset-top, 0px); right: env(safe-area-inset-right, 0px);
+  bottom: env(safe-area-inset-bottom, 0px); left: env(safe-area-inset-left, 0px);
+}
+.ocard { position: absolute; color: #FFFFFF; border-radius: calc(var(--u) * 6);
+  padding: calc(var(--u) * 13) calc(var(--u) * 18) calc(var(--u) * 13) calc(var(--u) * 21);
+  max-width: calc(100% - 2 * max(12px, calc(var(--u) * 40))); transition: bottom 0.35s ease; }
+.ocard::before { content: ""; position: absolute; left: 0; top: calc(var(--u) * 6); bottom: calc(var(--u) * 6);
+  width: max(2px, calc(var(--u) * 3)); background: rgba(255, 255, 255, 0.92); }
+.ocard[hidden] { display: none; }
+.ocard .l1 { font: 400 max(12px, calc(var(--u) * 38)) / 1.25 "Newsreader", Georgia, serif; }
+.ocard .l2 { font: 600 max(12px, calc(var(--u) * 23)) / 1.3 "Source Sans 3", -apple-system, Helvetica, sans-serif; margin-top: calc(var(--u) * 4); }
+.ocard .lab { font: 700 max(12px, calc(var(--u) * 19)) / 1.3 "Source Sans 3", -apple-system, Helvetica, sans-serif;
+  letter-spacing: calc(var(--u) * 2); text-transform: uppercase; }
+.ocard .body { font: 600 max(12px, calc(var(--u) * 24)) / 1.3 "Source Sans 3", -apple-system, Helvetica, sans-serif;
+  max-width: max(220px, calc(var(--fw) * 0.27)); margin-top: calc(var(--u) * 4); }
+.ocard.slot-tl, .ocard.slot-bl { left: max(12px, calc(var(--u) * 40)); }
+.ocard.slot-tr, .ocard.slot-br { right: max(12px, calc(var(--u) * 40)); }
+.ocard.slot-tc, .ocard.slot-bc { left: 50%; transform: translateX(-50%); }
+.ocard.slot-tl, .ocard.slot-tc, .ocard.slot-tr { top: max(12px, calc(var(--u) * 40)); }
+.ocard.slot-bl, .ocard.slot-bc, .ocard.slot-br { bottom: max(12px, calc(var(--u) * 40)); }
+/* when the control bar is up, bottom cards step above it instead of hiding under it */
+#stage.bar-up .ocard.slot-bl, #stage.bar-up .ocard.slot-bc, #stage.bar-up .ocard.slot-br { bottom: max(12px, calc(var(--u) * 40), calc(var(--bar-h) + 8px)); }
+.bar button[hidden] { display: none; }
+/* iPhone Safari can only fullscreen a bare video, which would leave the cards behind: the stage fills the screen
+   with CSS instead (dvh follows Safari's moving toolbars), best turned sideways. */
+#stage { height: 100vh; height: 100dvh; }
+
+/* ===== LANE LINE (BETA-LANE-STANDARD) ===== */
+.lane { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 12px; margin-top: 4px;
+  font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.06em; color: var(--dust-text); }
+.lane a { color: var(--sun); display: inline-flex; align-items: center; min-height: 44px; }
+.lane a:hover { text-decoration: underline; }
+
 @media (max-width: 560px) { #picker { padding: 36px 18px 30px; } .p-kicker { letter-spacing: 0.08em; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+/* reduced motion: the cards still fade in and out with the film (they are timed to it, not decorative motion) but never slide */
 /* FOOTER-NAV:START  every page of the site, on every page of the site (2026-09-26) */
 .fnav,.fmeta{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 22px;max-width:1060px;margin:0 auto;font-family:'DM Mono',ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;line-height:1.3}
 .fnav{margin-top:12px}
@@ -176,6 +232,17 @@ label.opt.disabled { cursor: not-allowed; }
     <div class="opt-list" id="music-list"></div>
   </div>
 
+  <div class="p-section">
+    <div class="p-label" id="cards-label">Bird names and facts</div>
+    <div class="seg" role="radiogroup" aria-labelledby="cards-label" id="cards-mode">
+      <label><input type="radio" name="cards-mode" value="off"><span>Off</span></label>
+      <label><input type="radio" name="cards-mode" value="names"><span>Names</span></label>
+      <label><input type="radio" name="cards-mode" value="facts"><span>Names and facts</span></label>
+    </div>
+    <p class="p-note">Films that have them show the bird's name and an ID tip over the video. Press C while watching to switch.</p>
+    <p class="p-note">On a TV: cast this tab or mirror your screen, and the names come along. Casting only the video leaves them behind.</p>
+  </div>
+
   <div class="p-toggles">
     <label class="toggle">
       <input type="checkbox" id="shuffle-video">
@@ -192,8 +259,9 @@ label.opt.disabled { cursor: not-allowed; }
   <a class="p-back" href="/">&larr; Back to slowmotionbirds.com</a>
 
   <details class="p-stamp">
-    <summary>Updated Sat / 2026-09-26 / 8:49 PM CT &middot; v1.1.0 &middot; changelog</summary>
+    <summary>Updated Fri / 2026-10-16 / 4:58 PM CT &middot; v1.2.0 &middot; changelog</summary>
     <ul class="changelog mono">
+      <li>1.2.0 (2026-10-16): Bird names and facts. Films that have them can show the bird's name and an ID tip over the video, drawn by the page and timed to the film, with a switch here and on the player (Off, Names, Names and facts, or press C), remembered on this device. Full screen takes the video and the cards together, and on an iPhone the player fills the screen instead. First films with names: the two Ruby-throated Hummingbird films, also added to All birds. A line by this stamp now switches between the live site and the preview.</li>
       <li>1.1.0 (2026-09-26): The footer now lists every page of the site, on every page, with the one you are on marked. Each page used to carry its own partial list, and the published contact sheets and the player carried almost none, so the deeper pages were only findable if you already knew they were there.</li>
       <li>1.0.4 (2026-09-20): Legibility pass, styling only. The player itself is unchanged and no words changed. Nothing is under 12px now, the intro, playlist names and shuffle labels are 16px, and the grey used for labels and small print moved to a lighter sibling that measures 7.9 to 1 on the page and 7.3 to 1 on a selected row (it was 6.2 and 5.7 against a floor of 7). A playlist that is not available yet shows a dashed edge and quieter ink, where it used to fade to 45 percent and its words dropped under the floor. During playback the buttons and the title card sit on a darker layer, so their words measure 6.7 to 1 even over a pure white frame. Every link is a full 44px touch target and keyboard focus shows a visible ring.</li>
       <li>1.0.3 (2026-09-19): A quiet Privacy link in the footer, pointing at the plain-language notice for this website at coltonland.com/privacy (what the visitor counter counts, what is never done, how to reach Colton). The player itself is unchanged.</li>
@@ -202,6 +270,21 @@ label.opt.disabled { cursor: not-allowed; }
       <li>1.0.0 (2026-08-09): First ship. Two bird playlists (All birds, Snow days), independent video/music queues, shuffle without immediate repeats, fade transitions, idle-fade controls, Chrome tab-cast. Music lane ships with "No music" only; the full library is mirrored and pending a license verdict.</li>
     </ul>
   </details>
+
+  <div class="lane" id="lane"></div>
+  <script>
+  // BETA-LANE-STANDARD: one line by the stamp, same path both ways. A footer link never takes a page down.
+  (function () { try {
+    var LIVE = 'https://slowmotionbirds.com', BETA = 'https://beta.slow-motion-birds-design.pages.dev';
+    var here = location.pathname + location.search, beta = location.hostname.indexOf('beta.') === 0;
+    var box = document.getElementById('lane');
+    box.appendChild(document.createTextNode(beta ? 'You are on the preview lane' : 'You are on the live site'));
+    var a = document.createElement('a');
+    a.href = (beta ? LIVE : BETA) + here;
+    a.textContent = beta ? 'Back to the live site' : 'View the preview';
+    box.appendChild(a);
+  } catch (e) {} })();
+  </script>
 
   <div class="p-bottom">
     <div class="snark">The birds don't know they're background noise. Let's keep it that way.</div>
@@ -228,11 +311,14 @@ label.opt.disabled { cursor: not-allowed; }
 
 <div id="stage">
   <div class="video-wrap" id="video-wrap"></div>
+  <div class="cards" id="cards" hidden></div>
   <div class="overlay" id="overlay"></div>
   <div class="toast" id="toast"></div>
   <div class="bar" id="bar">
     <button id="btn-playpause" aria-label="Pause">&#10073;&#10073; <span class="lbl">Pause</span></button>
     <button id="btn-next" aria-label="Next video">&#9197; <span class="lbl">Next</span></button>
+    <button id="btn-cards" aria-label="Bird names and facts">Aa <span class="lbl" id="btn-cards-lbl">Names and facts</span></button>
+    <button id="btn-fs" aria-label="Full screen" hidden>&#x26F6; <span class="lbl">Full screen</span></button>
     <button id="btn-music" disabled title="Pending license check">&#9834; <span class="lbl">Music: pending</span></button>
     <button id="btn-exit" aria-label="Exit">&#10005; <span class="lbl">Exit</span></button>
   </div>
@@ -294,7 +380,9 @@ label.opt.disabled { cursor: not-allowed; }
       if (enabledCount === 0) input.disabled = true;
       if (i === 0 && enabledCount > 0) { input.checked = true; selectedVideoPlaylistId = pl.id; }
       input.addEventListener('change', function () { selectedVideoPlaylistId = pl.id; });
-      var body = el('div', 'opt-body', '<span class="opt-name">' + pl.name + '</span><span class="opt-note">' + enabledCount + ' film' + (enabledCount === 1 ? '' : 's') + '</span>');
+      var named = pl.items.filter(function (it) { return it.enabled !== false && it.overlay; }).length;
+      var note = enabledCount + ' film' + (enabledCount === 1 ? '' : 's') + (named ? ' &middot; names and facts on ' + named : '');
+      var body = el('div', 'opt-body', '<span class="opt-name">' + pl.name + '</span><span class="opt-note">' + note + '</span>');
       label.appendChild(input); label.appendChild(body);
       list.appendChild(label);
     });
@@ -344,7 +432,7 @@ label.opt.disabled { cursor: not-allowed; }
 
   function buildSrc(vimeoId) {
     return 'https://player.vimeo.com/video/' + vimeoId +
-      '?autoplay=1&muted=1&loop=0&autopause=0&title=0&byline=0&portrait=0&dnt=1';
+      '?autoplay=1&muted=1&loop=0&autopause=0&title=0&byline=0&portrait=0&dnt=1&controls=0';
   }
 
   function showToast(text) {
@@ -358,6 +446,146 @@ label.opt.disabled { cursor: not-allowed; }
     overlay.classList.toggle('hidden', hide);
   }
 
+
+  // ===== Names and facts (1.2.0, CWQ-301) =====
+  // Colton, 2026-10-16: "the raw videos themselves would just be slow-motion videos, but if you wanted the bird names
+  // and facts, go to slowmotionbirds.com and toggle on facts." A film whose playlist item has an overlay (schema 1,
+  // Projects/Slow Motion Birds/OVERLAY-LAYER.md) gets its title and fact cards drawn here in HTML over the Vimeo
+  // player, the same layer the Apple TV app and the review page read. Vimeo reports the time about four times a
+  // second, so the page keeps its own clock between reports (last reported time plus elapsed time while playing)
+  // and asks Vimeo again on play, pause, seek and buffering. Every frame works out each card's opacity from that
+  // clock, so a paused or scrubbed film shows exactly the right card state. Switch: Off, Names, Names and facts.
+  var cardsEl = document.getElementById('cards');
+  var CARD_MODES = ['off', 'names', 'facts'];
+  var CARD_LABELS = { off: 'Names off', names: 'Names', facts: 'Names and facts' };
+  var CARD_KEY = 'smb-cards-mode';
+  var cardMode = 'facts';
+  try { if (CARD_MODES.indexOf(localStorage.getItem(CARD_KEY)) >= 0) cardMode = localStorage.getItem(CARD_KEY); } catch (e) {}
+  var cardOverlay = null, cardEls = [], cardFor = null, overlayCache = {};
+  var clock = { sec: 0, at: 0, playing: false, rate: 1 };
+  var cardRaf = 0;
+
+  function clockNow() {
+    return clock.playing ? clock.sec + (performance.now() - clock.at) / 1000 * clock.rate : clock.sec;
+  }
+  function setClock(sec, playing) {
+    clock.sec = sec || 0; clock.at = performance.now();
+    if (playing !== undefined) clock.playing = playing;
+  }
+  function resyncClock() {
+    if (!vimeoPlayer) return;
+    var p = vimeoPlayer;
+    Promise.all([p.getCurrentTime(), p.getPaused()]).then(function (r) {
+      if (p === vimeoPlayer) { setClock(r[0], !r[1]); drawCards(); }
+    }).catch(function () {});
+  }
+
+  function buildCards() {
+    cardsEl.textContent = '';
+    cardEls = (cardOverlay ? cardOverlay.cards : []).map(function (c) {
+      var box = document.createElement('div');
+      box.className = 'ocard ' + c.kind + ' slot-' + c.slot;
+      box.hidden = true;
+      // the measured box opacity for this clip, never lighter than the house floor
+      box.style.backgroundColor = 'rgba(0, 0, 0, ' + Math.max(0.38, c.box_alpha || 0.45) + ')';
+      var lines = c.lines || [];
+      if (c.kind === 'title') {
+        box.appendChild(el('div', 'l1')).textContent = lines[0] || '';
+        if (lines[1]) box.appendChild(el('div', 'l2')).textContent = lines[1];
+      } else {
+        box.appendChild(el('div', 'lab')).textContent = c.label || 'ID tip';
+        lines.forEach(function (ln) { box.appendChild(el('div', 'body')).textContent = ln; });
+      }
+      cardsEl.appendChild(box);
+      return { c: c, box: box };
+    });
+    sizeCards();
+  }
+
+  // --u is one design pixel: the whole 1920 by 1080 frame fitted inside the screen, so cards fit narrow screens too
+  function sizeCards() {
+    var w = cardsEl.clientWidth, h = cardsEl.clientHeight;
+    if (!w || !h) return;
+    var u = Math.min(w / 1920, h / 1080);
+    cardsEl.style.setProperty('--u', u.toFixed(4) + 'px');
+    cardsEl.style.setProperty('--fw', Math.round(1920 * u) + 'px');
+  }
+  window.addEventListener('resize', sizeCards);
+
+  function drawCards() {
+    if (!cardOverlay) return;
+    var t = clockNow(), fade = typeof cardOverlay.fade === 'number' ? cardOverlay.fade : 0.4;
+    cardEls.forEach(function (it) {
+      var c = it.c, on = cardMode === 'facts' || (cardMode === 'names' && c.kind === 'title'), o = 0;
+      if (on && t >= c.t_in && t <= c.t_out) {
+        o = Math.min(1, fade ? (t - c.t_in) / fade : 1, fade ? (c.t_out - t) / fade : 1);
+      }
+      it.box.style.opacity = String(Math.max(0, o));
+      it.box.hidden = o <= 0;
+    });
+  }
+  function cardLoop() {
+    drawCards();
+    cardRaf = stage.classList.contains('active') ? requestAnimationFrame(cardLoop) : 0;
+  }
+  function startCardLoop() { if (!cardRaf) cardRaf = requestAnimationFrame(cardLoop); }
+  function stopCardLoop() { if (cardRaf) cancelAnimationFrame(cardRaf); cardRaf = 0; }
+
+  function clearCards() {
+    cardOverlay = null; cardEls = []; cardFor = null;
+    cardsEl.textContent = ''; cardsEl.hidden = true;
+  }
+  // called for every film: one with an overlay gets its cards, one without plays plain
+  function cardsForItem(item) {
+    clearCards();
+    setClock(0, false);
+    if (!item || !item.overlay) return;
+    cardFor = item;
+    var got = overlayCache[item.overlay] || (overlayCache[item.overlay] = fetch(item.overlay).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }));
+    got.then(function (ov) {
+      if (cardFor !== item) return;
+      if (!ov || ov.schema !== 1 || !Array.isArray(ov.cards)) { console.warn('overlay skipped, not schema 1:', item.overlay); return; }
+      cardOverlay = ov;
+      cardsEl.hidden = false;
+      buildCards();
+      resyncClock();
+    }).catch(function (err) {
+      delete overlayCache[item.overlay];
+      console.warn('overlay failed to load', item.overlay, err);
+    });
+  }
+
+  function paintCardMode() {
+    document.querySelectorAll('input[name="cards-mode"]').forEach(function (r) { r.checked = r.value === cardMode; });
+    document.getElementById('btn-cards-lbl').textContent = CARD_LABELS[cardMode];
+    document.getElementById('btn-cards').setAttribute('aria-label', 'Bird names and facts: ' + CARD_LABELS[cardMode] + '. Click to switch.');
+  }
+  function setCardMode(m, announce) {
+    cardMode = m;
+    try { localStorage.setItem(CARD_KEY, m); } catch (e) { /* private mode: the choice lasts this visit */ }
+    paintCardMode(); drawCards();
+    if (announce) showToast(CARD_LABELS[m]);
+  }
+  function cycleCardMode() { setCardMode(CARD_MODES[(CARD_MODES.indexOf(cardMode) + 1) % CARD_MODES.length], true); }
+  document.querySelectorAll('input[name="cards-mode"]').forEach(function (r) {
+    r.addEventListener('change', function () { if (r.checked) setCardMode(r.value); });
+  });
+  paintCardMode();
+
+  function wireClock(p) {
+    p.on('timeupdate', function (d) { setClock(d.seconds); });
+    p.on('play', function (d) { setClock(d && d.seconds, true); });
+    p.on('playing', resyncClock);
+    p.on('pause', function (d) { setClock(d && d.seconds, false); drawCards(); });
+    p.on('seeked', function (d) { setClock(d && d.seconds); resyncClock(); });
+    p.on('bufferstart', function () { setClock(clockNow(), false); });
+    p.on('bufferend', resyncClock);
+    p.on('playbackratechange', function (d) { clock.sec = clockNow(); clock.at = performance.now(); clock.rate = (d && d.playbackRate) || 1; });
+  }
+
   function currentVideoItem() { return videoQueue[videoIndex]; }
 
   function loadVideoAt(index, opts) {
@@ -366,11 +594,14 @@ label.opt.disabled { cursor: not-allowed; }
     if (!item) return;
     fadeOverlay(false);
     var proceed = function () {
+      if (!vimeoPlayer) return;
+      cardsForItem(item);
       vimeoPlayer.loadVideo(item.vimeo_id).then(function () {
         lastVideoId = item.vimeo_id;
         vimeoPlayer.setMuted(true);
         vimeoPlayer.play().catch(function (e) { console.warn('play() rejected', e); });
         showToast(item.title);
+        resyncClock();
       }).catch(function (err) {
         console.error('Vimeo loadVideo failed for', item.vimeo_id, err);
         advanceVideo();
@@ -448,9 +679,26 @@ label.opt.disabled { cursor: not-allowed; }
 
   function showBar() {
     bar.classList.add('show');
+    stage.classList.add('bar-up');
+    cardsEl.style.setProperty('--bar-h', bar.offsetHeight + 'px');
+    updateFsButton();
     clearTimeout(idleTimer);
-    idleTimer = setTimeout(function () { bar.classList.remove('show'); }, 4000);
+    idleTimer = setTimeout(function () { bar.classList.remove('show'); stage.classList.remove('bar-up'); }, 4000);
   }
+
+  // The site's own full screen takes the whole stage (video plus cards). Vimeo's own fullscreen button is out of
+  // reach (controls=0, and the frame ignores the pointer), because it would take the bare video and leave the
+  // cards behind. Leaving full screen still leaves the player, as before; this button is for when the browser
+  // refused the first request. iPhone Safari has no full screen for anything but a bare video: the stage already
+  // fills the screen there, so the button stays hidden and the page suggests turning the phone sideways.
+  var canFS = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+  function updateFsButton() { document.getElementById('btn-fs').hidden = !canFS || isFullscreen(); }
+  document.getElementById('btn-fs').addEventListener('click', function (e) {
+    e.stopPropagation(); requestFS(stage); setTimeout(updateFsButton, 300);
+  });
+  document.getElementById('btn-cards').addEventListener('click', function (e) {
+    e.stopPropagation(); cycleCardMode();
+  });
 
   ['pointermove', 'keydown', 'click', 'touchstart'].forEach(function (evt) {
     stage.addEventListener(evt, showBar, { passive: true });
@@ -492,9 +740,12 @@ label.opt.disabled { cursor: not-allowed; }
   function teardownStage() {
     stage.classList.remove('active');
     if (vimeoPlayer) {
-      try { vimeoPlayer.off('ended'); vimeoPlayer.off('error'); vimeoPlayer.off('loaded'); vimeoPlayer.unload(); } catch (e) {}
+      try { ['ended', 'error', 'loaded', 'timeupdate', 'play', 'playing', 'pause', 'seeked', 'bufferstart', 'bufferend', 'playbackratechange'].forEach(function (ev) { vimeoPlayer.off(ev); }); vimeoPlayer.unload(); } catch (e) {}
       vimeoPlayer = null;
     }
+    stopCardLoop();
+    clearCards();
+    stage.classList.remove('bar-up');
     videoWrap.innerHTML = '';
     audio.pause();
     audio.src = '';
@@ -536,6 +787,8 @@ label.opt.disabled { cursor: not-allowed; }
 
     var iframe = document.createElement('iframe');
     iframe.setAttribute('allow', 'autoplay; fullscreen');
+    iframe.setAttribute('tabindex', '-1');
+    iframe.title = 'Bird film';
     iframe.src = buildSrc(videoQueue[0].vimeo_id);
     videoWrap.appendChild(iframe);
     lastVideoId = videoQueue[0].vimeo_id;
@@ -544,16 +797,23 @@ label.opt.disabled { cursor: not-allowed; }
     vimeoPlayer.on('ended', handleVideoEnded);
     vimeoPlayer.on('error', handleVideoError);
     vimeoPlayer.on('loaded', handleVideoLoaded);
+    wireClock(vimeoPlayer);
+    cardsForItem(videoQueue[0]);
+    startCardLoop();
     vimeoPlayer.setMuted(true).catch(function () {});
     vimeoPlayer.getVideoTitle().then(showToast).catch(function () { showToast(videoQueue[0].title); });
 
     if (musicQueue.length) { loadTrackAt(0); }
 
     showBar();
+    if (!canFS && window.matchMedia('(orientation: portrait)').matches) {
+      setTimeout(function () { showToast('Turn your phone sideways to fill the screen'); }, 2800);
+    }
   });
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && stage.classList.contains('active')) leaveStage();
+    if (stage.classList.contains('active') && !e.metaKey && !e.ctrlKey && !e.altKey && (e.key === 'c' || e.key === 'C')) cycleCardMode();
   });
 })();
 </script>

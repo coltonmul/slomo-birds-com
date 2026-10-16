@@ -1,22 +1,80 @@
 {
   "video_playlists": [
     {
+      "id": "hummingbirds",
+      "name": "Hummingbirds, with names and facts",
+      "items": [
+        {
+          "vimeo_id": "1222801626",
+          "title": "Ruby-throated Hummingbird, wide",
+          "enabled": true,
+          "overlay": "overlays/vimeo-1222801626.json"
+        },
+        {
+          "vimeo_id": "1222796771",
+          "title": "Ruby-throated Hummingbird, close",
+          "enabled": true,
+          "overlay": "overlays/vimeo-1222796771.json"
+        }
+      ]
+    },
+    {
       "id": "all-birds",
       "name": "All birds",
       "items": [
-        { "vimeo_id": "1046042489", "title": "Barred Owl Visits", "enabled": true },
-        { "vimeo_id": "1050417825", "title": "Snow Birds & Lo-Fi Beats, Vol. 1", "enabled": true },
-        { "vimeo_id": "1050607021", "title": "House Finch Feeder Fight Fest", "enabled": true },
-        { "vimeo_id": "911920183", "title": "Backyard Snow Birds", "enabled": true },
-        { "vimeo_id": "802513702", "title": "Bird Clips: Selects", "enabled": true }
+        {
+          "vimeo_id": "1222801626",
+          "title": "Ruby-throated Hummingbird, wide",
+          "enabled": true,
+          "overlay": "overlays/vimeo-1222801626.json"
+        },
+        {
+          "vimeo_id": "1222796771",
+          "title": "Ruby-throated Hummingbird, close",
+          "enabled": true,
+          "overlay": "overlays/vimeo-1222796771.json"
+        },
+        {
+          "vimeo_id": "1046042489",
+          "title": "Barred Owl Visits",
+          "enabled": true
+        },
+        {
+          "vimeo_id": "1050417825",
+          "title": "Snow Birds & Lo-Fi Beats, Vol. 1",
+          "enabled": true
+        },
+        {
+          "vimeo_id": "1050607021",
+          "title": "House Finch Feeder Fight Fest",
+          "enabled": true
+        },
+        {
+          "vimeo_id": "911920183",
+          "title": "Backyard Snow Birds",
+          "enabled": true
+        },
+        {
+          "vimeo_id": "802513702",
+          "title": "Bird Clips: Selects",
+          "enabled": true
+        }
       ]
     },
     {
       "id": "snow-days",
       "name": "Snow days",
       "items": [
-        { "vimeo_id": "1050417825", "title": "Snow Birds & Lo-Fi Beats, Vol. 1", "enabled": true },
-        { "vimeo_id": "911920183", "title": "Backyard Snow Birds", "enabled": true }
+        {
+          "vimeo_id": "1050417825",
+          "title": "Snow Birds & Lo-Fi Beats, Vol. 1",
+          "enabled": true
+        },
+        {
+          "vimeo_id": "911920183",
+          "title": "Backyard Snow Birds",
+          "enabled": true
+        }
       ]
     }
   ],
@@ -34,5 +92,6 @@
       "note": "pending license check",
       "tracks": []
     }
-  ]
+  ],
+  "_overlay": "An item's optional overlay is its names and facts layer (schema 1, Projects/Slow Motion Birds/OVERLAY-LAYER.md), drawn by the page over the video. Items without one play plain."
 }
