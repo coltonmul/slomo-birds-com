@@ -43,19 +43,17 @@ a { color: inherit; text-decoration: none; }
 
 /* ===== FULL-BLEED VIDEO HERO ===== */
 .hero { position: relative; height: 100svh; min-height: 540px; overflow: hidden; display: flex; align-items: flex-end; }
-.hero-still { position: absolute; inset: -6%; background: url('https://i.vimeocdn.com/video/2195850370-f0e530f4bb4dff86bb00bfd7570368113b43e45c7f9ee35e07d45885b2530831-d_1920x1080?region=us') center/cover no-repeat; animation: kenburns 26s ease-in-out infinite alternate; }
+.hero-still { position: absolute; inset: -6%; background: url('/hero/ruby-wide.jpg') center/cover no-repeat; animation: kenburns 26s ease-in-out infinite alternate; }
 /* while a new shot loads, the poster frame lifts above the player so the swap never flashes black */
 .hero-still.covering { z-index: 2; }
 .hero-still.fading { z-index: 2; opacity: 0; transition: opacity 0.6s ease; }
 @keyframes kenburns { from { transform: scale(1) translateY(0); } to { transform: scale(1.09) translateY(-1.5%); } }
 @media (prefers-reduced-motion: reduce) { .hero-still { animation: none; } }
 .hero-video { position: absolute; inset: 0; pointer-events: none; }
-.hero-video iframe {
-  position: absolute; top: 50%; left: 50%;
-  width: max(100vw, 177.78svh); height: max(100svh, 56.25vw);
-  transform: translate(-50%, -50%);
-  border: 0;
-}
+/* the footage fills the hero the way the old Vimeo iframe did: cropped to cover, centered */
+.hero-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+/* visitors who ask for less motion get the still frame, never the moving footage */
+@media (prefers-reduced-motion: reduce) { .hero-video { display: none; } }
 .hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(12,14,16,0.15) 0%, rgba(12,14,16,0.05) 45%, rgba(12,14,16,0.82) 100%); }
 .hero-content { position: relative; z-index: 2; width: 100%; max-width: 1300px; margin: 0 auto; padding: 0 30px 56px; }
 /* reading scrim: a dark layer that starts just above the words and follows the text block down,
@@ -137,6 +135,11 @@ h1 .sun { color: var(--sun); }
 .signup-fine a { color: var(--sun); text-decoration: underline; text-underline-offset: 2px; }
 @media (max-width: 560px) { .signup { padding: 30px 16px 10px; } }
 .stamp { margin-top: 10px; }
+/* LANE LINE (BETA-LANE-STANDARD), same look as the player's */
+.lane { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 12px; margin-top: 4px;
+  font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.06em; color: var(--dust-text); }
+.lane a { color: var(--sun); display: inline-flex; align-items: center; min-height: 44px; }
+.lane a:hover { text-decoration: underline; }
 .footer details { margin: 6px auto 0; max-width: 640px; text-align: left; text-transform: none; letter-spacing: 0; font-family: 'DM Sans', sans-serif; font-size: 14px; }
 .footer summary { cursor: pointer; text-align: center; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; min-height: 44px; display: flex; align-items: center; justify-content: center; }
 .footer details p { margin-top: 6px; color: var(--dust-text); }
@@ -154,12 +157,24 @@ h1 .sun { color: var(--sun); }
 </head>
 <body>
 
-<!-- HERO: full-bleed slow motion ruby-throated hummingbird, wide shot by default (Vimeo 1222801626),
-     close up on the toggle (1222796771). Text floats over the footage. -->
+<!-- HERO: full-bleed slow motion ruby-throated hummingbird, wide shot by default, close up on the toggle.
+     Both play from this site's own /hero/ folder (they used to stream from Vimeo 1222801626 and 1222796771).
+     Text floats over the footage. -->
 <header class="hero">
   <div class="hero-still" aria-hidden="true"></div>
   <div class="hero-video" aria-hidden="true">
-    <iframe id="hero-video-frame" src="https://player.vimeo.com/video/1222801626?background=1&autoplay=1&muted=1&loop=1&autopause=0&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen" title=""></iframe>
+    <video id="hero-video" autoplay muted loop playsinline preload="metadata" poster="/hero/ruby-wide.jpg" aria-hidden="true" tabindex="-1" disablepictureinpicture disableremoteplayback>
+      <source src="/hero/ruby-wide.mp4" type="video/mp4">
+    </video>
+    <script>
+    // Less motion asked for: stop the footage before it starts. The CSS hides it too; this saves the download.
+    (function () { try {
+      var v = document.getElementById('hero-video');
+      if (v && window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        v.removeAttribute('autoplay'); v.autoplay = false; v.preload = 'none'; v.pause();
+      }
+    } catch (e) {} })();
+    </script>
   </div>
   <div class="hero-shade"></div>
   <button class="hero-toggle" id="hero-toggle" type="button">Close up instead</button>
@@ -275,57 +290,72 @@ h1 .sun { color: var(--sun); }
     <span>Built by Colton with Claude</span>
   </div>
   <!-- FOOTER-NAV:END -->
-  <div class="stamp">v1.4.0 &middot; Updated Sun / 2026-09-27 / 4:10 AM CT </div>
+  <div class="stamp">v1.5.0 &middot; Updated Mon / 2026-10-26 / 8:46 PM CT </div>
   <details><summary>Changelog</summary>
+    <p>v1.5.0 (2026-10-26, 8:46 PM): The hummingbird behind the headline now plays from this site instead of from Vimeo. Same two shots, same loop, same switch between them, a still from each shot while it loads. Visitors who ask their device for less motion now get the still frame instead of moving footage. A line by this stamp now switches between the live site and the preview.</p>
     <p>v1.4.0 (2026-09-27, 4:10 AM): A "keep me posted" email signup above the footer, linked from the hero. Shares the list betterbirder.com already uses; the privacy page now says so.</p>
     <p>v1.3.0 (2026-09-26, 8:49 PM): The footer now lists every page of the site, on every page, with the one you are on marked. Each page used to carry its own partial list, and the published contact sheets and the player carried almost none, so the deeper pages were only findable if you already knew they were there.</p>
     <p>v1.2.0 (2026-09-26, 8:22 PM): A fifth field note, Reading the Waveform, on the Field Notes grid and in the footer: how to read the scope for bird exposure, with the IRE bands measured off real frames from the archive.</p>
     <p>v1.1.0 (2026-09-25, 3:01 PM): A Field Notes section under the films, with a button up top that jumps to it, so the workflow, contact sheets, footage levels and the light and lens calculator are no longer hiding in the footer. A pasted link to the site now unfurls into a photo card of the hummingbird instead of a text card, and every field notes page has its own.</p>
     <p>v1.0.0: The homepage before it carried a version: the hummingbird hero and the five films.</p>
   </details>
+  <div class="lane" id="lane"></div>
+  <script>
+  // BETA-LANE-STANDARD: one line by the stamp, same path both ways. A footer link never takes a page down.
+  (function () { try {
+    var LIVE = 'https://slowmotionbirds.com', BETA = 'https://beta.slow-motion-birds-design.pages.dev';
+    var here = location.pathname + location.search, beta = location.hostname.indexOf('beta.') === 0;
+    var box = document.getElementById('lane');
+    box.appendChild(document.createTextNode(beta ? 'You are on the preview lane' : 'You are on the live site'));
+    var a = document.createElement('a');
+    a.href = (beta ? LIVE : BETA) + here;
+    a.textContent = beta ? 'Back to the live site' : 'View the preview';
+    box.appendChild(a);
+  } catch (e) {} })();
+  </script>
   </div>
 </footer>
 
 
 <!-- HERO SHOT SWITCHER
-     Two cuts of the same hummingbird. The button up top swaps which one plays
-     behind the headline, in place, with no page reload: the poster frame lifts
-     over the player while the new clip loads, then fades off once Vimeo reports
-     it actually playing. The choice is remembered on the visitor's own device.
-     To add or change a shot, edit the SHOTS list below. Each shot carries the
-     loop window that plays behind the headline. -->
-<script src="https://player.vimeo.com/api/player.js"></script>
+     Two cuts of the same hummingbird, both served from this site's /hero/ folder.
+     The button up top swaps which one plays behind the headline, in place, with
+     no page reload: the still frame lifts over the footage while the new clip
+     loads, then fades off once the video is actually playing. The choice is
+     remembered on the visitor's own device. To add or change a shot, edit the
+     SHOTS list below. Each shot carries the loop window that plays behind the
+     headline. The files in /hero/ are cut to those windows (plus a second of
+     margin), so a wider window needs a re-encode from the source footage. -->
 <script>
 (function () {
-  // First entry is the default shot. It has to match the iframe src and the
-  // .hero-still poster in the markup above, or the page opens on a mismatch.
+  // First entry is the default shot. It has to match the <video> source, its
+  // poster and the .hero-still image in the markup above, or the page opens on a mismatch.
   var SHOTS = [
     // loopStart / loopEnd are seconds. loopEnd null plays the clip out.
-    // The wide file is 91s long, far too long to sit behind a headline, so it
-    // loops its opening stretch. Move these two numbers to change the window.
-    { id: '1222801626', name: 'Wide angle', button: 'Close up instead',
-      loopStart: 0, loopEnd: 24,
-      still: 'https://i.vimeocdn.com/video/2195850370-f0e530f4bb4dff86bb00bfd7570368113b43e45c7f9ee35e07d45885b2530831-d_1920x1080?region=us' },
-    { id: '1222796771', name: 'Close up',   button: 'Wide angle instead',
-      loopStart: 0, loopEnd: null,
-      still: 'https://i.vimeocdn.com/video/2195844308-484c7d9df63fad5db71bd845502310f8bd1de8434ea51221a3855dc95f752ff0-d_1920x1080?region=us' }
+    // The wide footage is 91s long, far too long to sit behind a headline, so it
+    // loops its opening stretch. ruby-wide.mp4 holds only the first 25s of it.
+    { id: 'wide',  legacy: '1222801626', name: 'Wide angle', button: 'Close up instead',
+      src: '/hero/ruby-wide.mp4',  poster: '/hero/ruby-wide.jpg',  loopStart: 0, loopEnd: 24 },
+    { id: 'close', legacy: '1222796771', name: 'Close up',   button: 'Wide angle instead',
+      src: '/hero/ruby-close.mp4', poster: '/hero/ruby-close.jpg', loopStart: 0, loopEnd: null }
   ];
   var STORE_KEY = 'smb-hero-shot';
-  var PARAMS = '?background=1&autoplay=1&muted=1&loop=1&autopause=0&title=0&byline=0&portrait=0&dnt=1';
 
-  var frame  = document.getElementById('hero-video-frame');
+  var video  = document.getElementById('hero-video');
   var still  = document.querySelector('.hero-still');
   var button = document.getElementById('hero-toggle');
-  if (!frame || !still || !button) return;
-  if (!window.Vimeo) { button.remove(); return; }   // no SDK, no switcher, hero still plays
+  if (!video || !still || !button) return;
+  var source = video.querySelector('source');
+  var calm = false;   // visitor asked for less motion: show stills only, never play
+  try { calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
 
-  var current = 0, player = null, swapping = false, coverTimer = null;
+  var current = 0, swapping = false, coverTimer = null;
 
   function remember(i) { try { localStorage.setItem(STORE_KEY, SHOTS[i].id); } catch (e) {} }
   function remembered() {
     try {
-      var id = localStorage.getItem(STORE_KEY);
-      for (var i = 0; i < SHOTS.length; i++) if (SHOTS[i].id === id) return i;
+      var id = localStorage.getItem(STORE_KEY);   // older visits stored the Vimeo number
+      for (var i = 0; i < SHOTS.length; i++) if (SHOTS[i].id === id || SHOTS[i].legacy === id) return i;
     } catch (e) {}
     return 0;
   }
@@ -344,39 +374,44 @@ h1 .sun { color: var(--sun); }
     button.disabled = false;
   }
 
-  // Loop only the useful stretch of a clip. Vimeo's own loop=1 always plays the
-  // whole file, which is wrong for long footage, so drive the restart here.
-  function armLoopWindow(player, shot) {
-    var start = shot.loopStart || 0;
-    var end = shot.loopEnd;
-    if (!start && end === null) return;        // nothing to trim, let loop=1 run it
-    var seeking = false;
-    function released() { seeking = false; }
-    if (start) player.setCurrentTime(start).catch(function () {});
-    player.on('timeupdate', function (data) {
-      if (seeking || end === null || data.seconds < end) return;
-      seeking = true;
-      player.setCurrentTime(start).then(released, released);
-    });
-  }
+  // Loop only the useful stretch of a clip. The loop attribute plays the whole
+  // file, which is wrong for long footage, so drive the restart here. The loop
+  // attribute stays on as the backstop if a check is ever missed.
+  var seeking = false;
+  video.addEventListener('seeked', function () { seeking = false; });
+  video.addEventListener('timeupdate', function () {
+    var shot = SHOTS[current], start = shot.loopStart || 0, end = shot.loopEnd;
+    if (seeking) return;
+    var t = video.currentTime;
+    if ((end !== null && t >= end) || t < start) { seeking = true; video.currentTime = start; }
+  });
+  video.addEventListener('loadedmetadata', function () {
+    var start = SHOTS[current].loopStart || 0;
+    if (start && video.currentTime < start) video.currentTime = start;
+  });
+  video.addEventListener('playing', function () { if (still.classList.contains('covering')) uncover(); });
 
   function show(i) {
     var shot = SHOTS[i];
     current = i;
+    seeking = false;
     label(i);
-
-    still.style.backgroundImage = "url('" + shot.still + "')";
+    still.style.backgroundImage = "url('" + shot.poster + "')";
+    video.poster = shot.poster;
+    source.src = shot.src;
+    if (calm) {                       // stills only: swap the picture and stop there, nothing downloads
+      swapping = false; button.disabled = false;
+      return;
+    }
     still.classList.remove('fading');
     still.classList.add('covering');
-
-    frame.src = 'https://player.vimeo.com/video/' + shot.id + PARAMS;
-    player = new Vimeo.Player(frame);
-    player.on('playing', uncover);
-    armLoopWindow(player, shot);
-    coverTimer = setTimeout(uncover, 6000);   // never leave the poster stuck over a working player
+    video.load();
+    var p = video.play();
+    if (p && p.catch) p.catch(function () {});   // autoplay refused: the poster stays up
+    coverTimer = setTimeout(uncover, 6000);      // never leave the still stuck over a working video
   }
 
-  SHOTS.forEach(function (shot) { new Image().src = shot.still; });   // both posters ready before the click
+  SHOTS.forEach(function (shot) { new Image().src = shot.poster; });   // both stills ready before the click
 
   button.addEventListener('click', function () {
     if (swapping) return;
@@ -388,7 +423,7 @@ h1 .sun { color: var(--sun); }
 
   var startAt = remembered();
   if (startAt !== 0) { show(startAt); }
-  else { label(0); armLoopWindow(player = new Vimeo.Player(frame), SHOTS[0]); }
+  else { label(0); }
 })();
 </script>
 
