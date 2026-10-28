@@ -116,6 +116,9 @@ label.opt.disabled { cursor: not-allowed; }
   width: max(100vw, 177.78vh); height: max(100vh, 56.25vw);
   transform: translate(-50%, -50%); border: 0; pointer-events: none;
 }
+.video-wrap video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border: 0; pointer-events: none;
+}
 .overlay { position: absolute; inset: 0; background: #000; opacity: 1; transition: opacity 0.4s ease; pointer-events: none; z-index: 2; }
 .overlay.hidden { opacity: 0; }
 
@@ -260,8 +263,9 @@ label.opt.disabled { cursor: not-allowed; }
   <a class="p-back" href="/">&larr; Back to slowmotionbirds.com</a>
 
   <details class="p-stamp">
-    <summary>Updated Fri / 2026-10-16 / 4:58 PM CT &middot; v1.2.0 &middot; changelog</summary>
+    <summary>Updated Wed / 2026-10-28 / 9:54 AM CT &middot; v1.3.0 &middot; changelog</summary>
     <ul class="changelog mono">
+      <li>1.3.0 (2026-10-28): The films no longer depend on Vimeo's player. The two Ruby-throated Hummingbird films play from this site's own copies, so their names and facts stay timed to the film and Pause still works on them. Barred Owl Visits and Backyard Snow Birds play from Livid. Snow Birds and Lo-Fi Beats Vol. 1, House Finch Feeder Fight Fest and Bird Clips: Selects are switched off for now: Vimeo no longer plays them, and they come back once they are on Livid. A Livid film moves on to the next one after its running time, and Pause is hidden while one plays, because Livid's player does not take orders from this page. New Previous and Shuffle buttons sit beside Next. The wide hummingbird film is now the 25-second cut the homepage uses (it was 91 seconds); both of its cards fall inside it.</li>
       <li>1.2.0 (2026-10-16): Bird names and facts. Films that have them can show the bird's name and an ID tip over the video, drawn by the page and timed to the film, with a switch here and on the player (Off, Names, Names and facts, or press C), remembered on this device. Full screen takes the video and the cards together, and on an iPhone the player fills the screen instead. First films with names: the two Ruby-throated Hummingbird films, also added to All birds. A line by this stamp now switches between the live site and the preview.</li>
       <li>1.1.0 (2026-09-26): The footer now lists every page of the site, on every page, with the one you are on marked. Each page used to carry its own partial list, and the published contact sheets and the player carried almost none, so the deeper pages were only findable if you already knew they were there.</li>
       <li>1.0.4 (2026-09-20): Legibility pass, styling only. The player itself is unchanged and no words changed. Nothing is under 12px now, the intro, playlist names and shuffle labels are 16px, and the grey used for labels and small print moved to a lighter sibling that measures 7.9 to 1 on the page and 7.3 to 1 on a selected row (it was 6.2 and 5.7 against a floor of 7). A playlist that is not available yet shows a dashed edge and quieter ink, where it used to fade to 45 percent and its words dropped under the floor. During playback the buttons and the title card sit on a darker layer, so their words measure 6.7 to 1 even over a pure white frame. Every link is a full 44px touch target and keyboard focus shows a visible ring.</li>
@@ -317,7 +321,9 @@ label.opt.disabled { cursor: not-allowed; }
   <div class="toast" id="toast"></div>
   <div class="bar" id="bar">
     <button id="btn-playpause" aria-label="Pause">&#10073;&#10073; <span class="lbl">Pause</span></button>
+    <button id="btn-prev" aria-label="Previous video">&#9198; <span class="lbl">Previous</span></button>
     <button id="btn-next" aria-label="Next video">&#9197; <span class="lbl">Next</span></button>
+    <button id="btn-shuffle" aria-label="Shuffle the films and play a different one">&#8644; <span class="lbl">Shuffle</span></button>
     <button id="btn-cards" aria-label="Bird names and facts">Aa <span class="lbl" id="btn-cards-lbl">Names and facts</span></button>
     <button id="btn-fs" aria-label="Full screen" hidden>&#x26F6; <span class="lbl">Full screen</span></button>
     <button id="btn-music" disabled title="Pending license check">&#9834; <span class="lbl">Music: pending</span></button>
@@ -325,7 +331,6 @@ label.opt.disabled { cursor: not-allowed; }
   </div>
 </div>
 
-<script src="https://player.vimeo.com/api/player.js"></script>
 <script>
 (function () {
   "use strict";
@@ -346,7 +351,12 @@ label.opt.disabled { cursor: not-allowed; }
   var videoQueue = [];
   var videoIndex = 0;
   var lastVideoId = null;
-  var vimeoPlayer = null;
+  // The film on stage: a <video> for the site's own copies (full control), or an iframe for Livid and Vimeo films.
+  // Neither Livid nor Vimeo's free embed takes orders from this page, so an iframe film moves on after its length.
+  var media = null;
+  var frame = null;
+  var filmTimer = null;
+  var mountSeq = 0;
 
   var musicQueue = [];
   var musicIndex = 0;
@@ -431,9 +441,12 @@ label.opt.disabled { cursor: not-allowed; }
     return a;
   }
 
-  function buildSrc(vimeoId) {
-    return 'https://player.vimeo.com/video/' + vimeoId +
-      '?autoplay=1&muted=1&loop=0&autopause=0&title=0&byline=0&portrait=0&dnt=1&controls=0';
+  // Livid's background mode plays muted, loops and hides its controls, the same ambient look the Vimeo embed had.
+  // Films not in Livid yet keep their Vimeo address until they are uploaded.
+  function frameSrc(item) {
+    if (item.livid) return 'https://livid.com/embed/' + encodeURIComponent(item.livid) + '?background=1';
+    return 'https://player.vimeo.com/video/' + encodeURIComponent(item.vimeo_id) +
+      '?autoplay=1&muted=1&loop=1&autopause=0&title=0&byline=0&portrait=0&dnt=1&controls=0';
   }
 
   function showToast(text) {
@@ -451,11 +464,10 @@ label.opt.disabled { cursor: not-allowed; }
   // ===== Names and facts (1.2.0, CWQ-301) =====
   // Colton, 2026-10-16: "the raw videos themselves would just be slow-motion videos, but if you wanted the bird names
   // and facts, go to slowmotionbirds.com and toggle on facts." A film whose playlist item has an overlay (schema 1,
-  // Projects/Slow Motion Birds/OVERLAY-LAYER.md) gets its title and fact cards drawn here in HTML over the Vimeo
-  // player, the same layer the Apple TV app and the review page read. Vimeo reports the time about four times a
-  // second, so the page keeps its own clock between reports (last reported time plus elapsed time while playing)
-  // and asks Vimeo again on play, pause, seek and buffering. Every frame works out each card's opacity from that
-  // clock, so a paused or scrubbed film shows exactly the right card state. Switch: Off, Names, Names and facts.
+  // Projects/Slow Motion Birds/OVERLAY-LAYER.md) gets its title and fact cards drawn here in HTML over the film,
+  // the same layer the Apple TV app and the review page read. Since 1.3.0 those films play in the page's own video
+  // element, so every frame reads the film's own clock and works out each card's opacity from it: a paused or
+  // scrubbed film shows exactly the right card state. Switch: Off, Names, Names and facts.
   var cardsEl = document.getElementById('cards');
   var CARD_MODES = ['off', 'names', 'facts'];
   var CARD_LABELS = { off: 'Names off', names: 'Names', facts: 'Names and facts' };
@@ -463,23 +475,9 @@ label.opt.disabled { cursor: not-allowed; }
   var cardMode = 'facts';
   try { if (CARD_MODES.indexOf(localStorage.getItem(CARD_KEY)) >= 0) cardMode = localStorage.getItem(CARD_KEY); } catch (e) {}
   var cardOverlay = null, cardEls = [], cardFor = null, overlayCache = {};
-  var clock = { sec: 0, at: 0, playing: false, rate: 1 };
   var cardRaf = 0;
 
-  function clockNow() {
-    return clock.playing ? clock.sec + (performance.now() - clock.at) / 1000 * clock.rate : clock.sec;
-  }
-  function setClock(sec, playing) {
-    clock.sec = sec || 0; clock.at = performance.now();
-    if (playing !== undefined) clock.playing = playing;
-  }
-  function resyncClock() {
-    if (!vimeoPlayer) return;
-    var p = vimeoPlayer;
-    Promise.all([p.getCurrentTime(), p.getPaused()]).then(function (r) {
-      if (p === vimeoPlayer) { setClock(r[0], !r[1]); drawCards(); }
-    }).catch(function () {});
-  }
+  function clockNow() { return media ? media.currentTime || 0 : 0; }
 
   function buildCards() {
     cardsEl.textContent = '';
@@ -539,7 +537,6 @@ label.opt.disabled { cursor: not-allowed; }
   // called for every film: one with an overlay gets its cards, one without plays plain
   function cardsForItem(item) {
     clearCards();
-    setClock(0, false);
     if (!item || !item.overlay) return;
     cardFor = item;
     var got = overlayCache[item.overlay] || (overlayCache[item.overlay] = fetch(item.overlay).then(function (r) {
@@ -552,7 +549,7 @@ label.opt.disabled { cursor: not-allowed; }
       cardOverlay = ov;
       cardsEl.hidden = false;
       buildCards();
-      resyncClock();
+      drawCards();
     }).catch(function (err) {
       delete overlayCache[item.overlay];
       console.warn('overlay failed to load', item.overlay, err);
@@ -576,37 +573,69 @@ label.opt.disabled { cursor: not-allowed; }
   });
   paintCardMode();
 
-  function wireClock(p) {
-    p.on('timeupdate', function (d) { setClock(d.seconds); });
-    p.on('play', function (d) { setClock(d && d.seconds, true); });
-    p.on('playing', resyncClock);
-    p.on('pause', function (d) { setClock(d && d.seconds, false); drawCards(); });
-    p.on('seeked', function (d) { setClock(d && d.seconds); resyncClock(); });
-    p.on('bufferstart', function () { setClock(clockNow(), false); });
-    p.on('bufferend', resyncClock);
-    p.on('playbackratechange', function (d) { clock.sec = clockNow(); clock.at = performance.now(); clock.rate = (d && d.playbackRate) || 1; });
+  function setPauseButton(paused) {
+    document.getElementById('btn-playpause').innerHTML = paused ? '&#9654; <span class="lbl">Play</span>' : '&#10073;&#10073; <span class="lbl">Pause</span>';
   }
 
-  function currentVideoItem() { return videoQueue[videoIndex]; }
+  // Takes down whatever film is on stage: the video stops and lets go of its file, the iframe goes away.
+  function unmountFilm() {
+    clearTimeout(filmTimer); filmTimer = null;
+    if (media) { try { media.pause(); media.removeAttribute('src'); media.load(); } catch (e) {} }
+    media = null; frame = null;
+    videoWrap.innerHTML = '';
+  }
+
+  function mountFilm(item) {
+    unmountFilm();
+    var seq = ++mountSeq;
+    lastVideoId = item.id;
+    if (item.file) {
+      var v = document.createElement('video');
+      v.muted = true; v.defaultMuted = true; v.autoplay = true; v.playsInline = true;
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('tabindex', '-1');
+      v.preload = 'auto';
+      if (item.poster) v.poster = item.poster;
+      v.addEventListener('playing', function () { if (seq === mountSeq) fadeOverlay(true); });
+      v.addEventListener('ended', function () { if (seq === mountSeq) advanceVideo(); });
+      v.addEventListener('error', function () {
+        if (seq !== mountSeq) return;
+        console.error('Film failed to load', item.file);
+        advanceVideo();
+      });
+      v.src = item.file;
+      videoWrap.appendChild(v);
+      media = v;
+      var tried = v.play();
+      if (tried && tried.catch) tried.catch(function (e) { console.warn('play() rejected', e); fadeOverlay(true); });
+    } else {
+      var f = document.createElement('iframe');
+      f.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+      f.setAttribute('tabindex', '-1');
+      f.title = item.title || 'Bird film';
+      f.addEventListener('load', function () { if (seq === mountSeq) setTimeout(function () { if (seq === mountSeq) fadeOverlay(true); }, 600); });
+      f.src = frameSrc(item);
+      videoWrap.appendChild(f);
+      frame = f;
+      // no ended event from an embed: move on after the film's running time (plus a moment for it to load)
+      filmTimer = setTimeout(function () { if (seq === mountSeq) advanceVideo(); }, ((item.seconds || 600) + 3) * 1000);
+    }
+    // Pause only works on a film this page plays itself
+    document.getElementById('btn-playpause').hidden = !media;
+    setPauseButton(false);
+    if (musicQueue.length && audio.paused && audio.src) audio.play().catch(function () {});
+    cardsForItem(item);
+    showToast(item.title);
+  }
 
   function loadVideoAt(index, opts) {
     opts = opts || {};
     var item = videoQueue[index];
     if (!item) return;
     fadeOverlay(false);
+    var seq = ++mountSeq;
     var proceed = function () {
-      if (!vimeoPlayer) return;
-      cardsForItem(item);
-      vimeoPlayer.loadVideo(item.vimeo_id).then(function () {
-        lastVideoId = item.vimeo_id;
-        vimeoPlayer.setMuted(true);
-        vimeoPlayer.play().catch(function (e) { console.warn('play() rejected', e); });
-        showToast(item.title);
-        resyncClock();
-      }).catch(function (err) {
-        console.error('Vimeo loadVideo failed for', item.vimeo_id, err);
-        advanceVideo();
-      });
+      if (seq !== mountSeq || !stage.classList.contains('active')) return;
+      mountFilm(item);
     };
     if (opts.immediate) { proceed(); } else { setTimeout(proceed, 400); }
   }
@@ -616,18 +645,26 @@ label.opt.disabled { cursor: not-allowed; }
     if (videoIndex >= videoQueue.length) {
       videoIndex = 0;
       if (document.getElementById('shuffle-video').checked) {
-        videoQueue = shuffle(videoQueue, lastVideoId, 'vimeo_id');
+        videoQueue = shuffle(videoQueue, lastVideoId, 'id');
       }
     }
     loadVideoAt(videoIndex);
   }
 
-  function handleVideoEnded() { advanceVideo(); }
-  function handleVideoError(e) {
-    console.error('Vimeo player error', e);
-    advanceVideo();
+  function previousVideo() {
+    if (!videoQueue.length) return;
+    videoIndex = (videoIndex - 1 + videoQueue.length) % videoQueue.length;
+    loadVideoAt(videoIndex);
   }
-  function handleVideoLoaded() { fadeOverlay(true); }
+
+  // Shuffle from the stage: a new order, starting with a different film than the one playing
+  function shuffleNow() {
+    if (videoQueue.length < 2) return;
+    videoQueue = shuffle(videoQueue, lastVideoId, 'id');
+    videoIndex = 0;
+    document.getElementById('shuffle-video').checked = true;
+    loadVideoAt(0);
+  }
 
   function buildMusicQueueFromSelection() {
     var pl = (data.music_playlists || []).find(function (p) { return p.id === selectedMusicPlaylistId; });
@@ -687,9 +724,9 @@ label.opt.disabled { cursor: not-allowed; }
     idleTimer = setTimeout(function () { bar.classList.remove('show'); stage.classList.remove('bar-up'); }, 4000);
   }
 
-  // The site's own full screen takes the whole stage (video plus cards). Vimeo's own fullscreen button is out of
-  // reach (controls=0, and the frame ignores the pointer), because it would take the bare video and leave the
-  // cards behind. Leaving full screen still leaves the player, as before; this button is for when the browser
+  // The site's own full screen takes the whole stage (video plus cards). The embedded players' own fullscreen
+  // buttons are out of reach (no controls, and the film ignores the pointer), because they would take the bare video
+  // and leave the cards behind. Leaving full screen still leaves the player, as before; this button is for when the browser
   // refused the first request. iPhone Safari has no full screen for anything but a bare video: the stage already
   // fills the screen there, so the button stays hidden and the page suggests turning the phone sideways.
   var canFS = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
@@ -707,24 +744,32 @@ label.opt.disabled { cursor: not-allowed; }
 
   document.getElementById('btn-playpause').addEventListener('click', function (e) {
     e.stopPropagation();
-    var btn = e.currentTarget;
-    if (!vimeoPlayer) return;
-    vimeoPlayer.getPaused().then(function (paused) {
-      if (paused) {
-        vimeoPlayer.play();
-        if (musicQueue.length) audio.play().catch(function () {});
-        btn.innerHTML = '&#10073;&#10073; <span class="lbl">Pause</span>';
-      } else {
-        vimeoPlayer.pause();
-        if (musicQueue.length) audio.pause();
-        btn.innerHTML = '&#9654; <span class="lbl">Play</span>';
-      }
-    });
+    if (!media) return;
+    if (media.paused) {
+      media.play().catch(function () {});
+      if (musicQueue.length) audio.play().catch(function () {});
+      setPauseButton(false);
+    } else {
+      media.pause();
+      if (musicQueue.length) audio.pause();
+      setPauseButton(true);
+    }
+    drawCards();
   });
 
   document.getElementById('btn-next').addEventListener('click', function (e) {
     e.stopPropagation();
     advanceVideo();
+  });
+
+  document.getElementById('btn-prev').addEventListener('click', function (e) {
+    e.stopPropagation();
+    previousVideo();
+  });
+
+  document.getElementById('btn-shuffle').addEventListener('click', function (e) {
+    e.stopPropagation();
+    shuffleNow();
   });
 
   document.getElementById('btn-exit').addEventListener('click', function (e) {
@@ -740,14 +785,11 @@ label.opt.disabled { cursor: not-allowed; }
 
   function teardownStage() {
     stage.classList.remove('active');
-    if (vimeoPlayer) {
-      try { ['ended', 'error', 'loaded', 'timeupdate', 'play', 'playing', 'pause', 'seeked', 'bufferstart', 'bufferend', 'playbackratechange'].forEach(function (ev) { vimeoPlayer.off(ev); }); vimeoPlayer.unload(); } catch (e) {}
-      vimeoPlayer = null;
-    }
+    mountSeq++;
+    unmountFilm();
     stopCardLoop();
     clearCards();
     stage.classList.remove('bar-up');
-    videoWrap.innerHTML = '';
     audio.pause();
     audio.src = '';
     clearTimeout(idleTimer);
@@ -773,7 +815,7 @@ label.opt.disabled { cursor: not-allowed; }
     if (!pl) return;
     var items = pl.items.filter(function (it) { return it.enabled !== false; });
     if (!items.length) return;
-    if (document.getElementById('shuffle-video').checked) items = shuffle(items, null, 'vimeo_id');
+    if (document.getElementById('shuffle-video').checked) items = shuffle(items, null, 'id');
     videoQueue = items;
     videoIndex = 0;
 
@@ -786,25 +828,10 @@ label.opt.disabled { cursor: not-allowed; }
     requestFS(stage);
     fadeOverlay(false);
 
-    var iframe = document.createElement('iframe');
-    iframe.setAttribute('allow', 'autoplay; fullscreen');
-    iframe.setAttribute('tabindex', '-1');
-    iframe.title = 'Bird film';
-    iframe.src = buildSrc(videoQueue[0].vimeo_id);
-    videoWrap.appendChild(iframe);
-    lastVideoId = videoQueue[0].vimeo_id;
-
-    vimeoPlayer = new Vimeo.Player(iframe);
-    vimeoPlayer.on('ended', handleVideoEnded);
-    vimeoPlayer.on('error', handleVideoError);
-    vimeoPlayer.on('loaded', handleVideoLoaded);
-    wireClock(vimeoPlayer);
-    cardsForItem(videoQueue[0]);
-    startCardLoop();
-    vimeoPlayer.setMuted(true).catch(function () {});
-    vimeoPlayer.getVideoTitle().then(showToast).catch(function () { showToast(videoQueue[0].title); });
-
+    // the first film starts inside this click, so the browser lets it play
     if (musicQueue.length) { loadTrackAt(0); }
+    loadVideoAt(0, { immediate: true });
+    startCardLoop();
 
     showBar();
     if (!canFS && window.matchMedia('(orientation: portrait)').matches) {
