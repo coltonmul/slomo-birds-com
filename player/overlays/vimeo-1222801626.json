@@ -1,0 +1,17 @@
+{
+ "schema": 1,
+ "clip_id": "vimeo-1222801626",
+ "duration": 91,
+ "style": "smb-card-1",
+ "fade": 0.4,
+ "frame": {"width": 1920, "height": 1080},
+ "cards": [
+  {"kind": "title", "t_in": 0.5, "t_out": 8.5, "slot": "tl",
+   "lines": ["Ruby-throated Hummingbird"], "box_alpha": 0.5},
+  {"kind": "fact", "t_in": 10.0, "t_out": 20.0, "slot": "bl", "label": "ID tip",
+   "lines": ["The only hummingbird that breeds in eastern North America. Males' ruby throats look black in most light; females' throats are grayish white."],
+   "source": "https://www.audubon.org/field-guide/bird/ruby-throated-hummingbird", "box_alpha": 0.5}
+ ],
+ "made_by": "hand, CWQ-301 (fact text from reel 01's layer; slots and box opacity measured on the Vimeo poster frame, then rounded up)",
+ "made_at": "2026-10-16T16:56:28-05:00"
+}

@@ -1,0 +1,17 @@
+{
+ "schema": 1,
+ "clip_id": "vimeo-1222796771",
+ "duration": 24,
+ "style": "smb-card-1",
+ "fade": 0.4,
+ "frame": {"width": 1920, "height": 1080},
+ "cards": [
+  {"kind": "title", "t_in": 0.5, "t_out": 8.5, "slot": "tl",
+   "lines": ["Ruby-throated Hummingbird"], "box_alpha": 0.45},
+  {"kind": "fact", "t_in": 9.0, "t_out": 19.0, "slot": "tr", "label": "ID tip",
+   "lines": ["Both sexes are metallic green on the back. Females have white tips on the outer tail feathers."],
+   "source": "https://www.audubon.org/field-guide/bird/ruby-throated-hummingbird", "box_alpha": 0.45}
+ ],
+ "made_by": "hand, CWQ-301 (fact text from reel 03's layer; slots and box opacity measured on the Vimeo poster frame, then rounded up)",
+ "made_at": "2026-10-16T16:56:28-05:00"
+}

@@ -1,22 +1,106 @@
 {
   "video_playlists": [
     {
+      "id": "hummingbirds",
+      "name": "Hummingbirds, with names and facts",
+      "items": [
+        {
+          "id": "ruby-wide",
+          "title": "Ruby-throated Hummingbird, wide",
+          "file": "/hero/ruby-wide.mp4",
+          "poster": "/hero/ruby-wide.jpg",
+          "enabled": true,
+          "overlay": "overlays/vimeo-1222801626.json"
+        },
+        {
+          "id": "ruby-close",
+          "title": "Ruby-throated Hummingbird, close",
+          "file": "/hero/ruby-close.mp4",
+          "poster": "/hero/ruby-close.jpg",
+          "enabled": true,
+          "overlay": "overlays/vimeo-1222796771.json"
+        }
+      ]
+    },
+    {
       "id": "all-birds",
       "name": "All birds",
       "items": [
-        { "vimeo_id": "1046042489", "title": "Barred Owl Visits", "enabled": true },
-        { "vimeo_id": "1050417825", "title": "Snow Birds & Lo-Fi Beats, Vol. 1", "enabled": true },
-        { "vimeo_id": "1050607021", "title": "House Finch Feeder Fight Fest", "enabled": true },
-        { "vimeo_id": "911920183", "title": "Backyard Snow Birds", "enabled": true },
-        { "vimeo_id": "802513702", "title": "Bird Clips: Selects", "enabled": true }
+        {
+          "id": "ruby-wide",
+          "title": "Ruby-throated Hummingbird, wide",
+          "file": "/hero/ruby-wide.mp4",
+          "poster": "/hero/ruby-wide.jpg",
+          "enabled": true,
+          "overlay": "overlays/vimeo-1222801626.json"
+        },
+        {
+          "id": "ruby-close",
+          "title": "Ruby-throated Hummingbird, close",
+          "file": "/hero/ruby-close.mp4",
+          "poster": "/hero/ruby-close.jpg",
+          "enabled": true,
+          "overlay": "overlays/vimeo-1222796771.json"
+        },
+        {
+          "id": "barred-owl",
+          "title": "Barred Owl Visits",
+          "livid": "0tMSe5UlI2SG",
+          "seconds": 275,
+          "enabled": true
+        },
+        {
+          "id": "snow-lofi-1",
+          "title": "Snow Birds & Lo-Fi Beats, Vol. 1",
+          "vimeo_id": "1050417825",
+          "seconds": 3197,
+          "enabled": false,
+          "note": "Off until it is in Livid: Vimeo shows \"This video is not available\" for it since the plan change (checked 2026-10-28). To turn it back on, add its Livid short ID as livid and set enabled to true."
+        },
+        {
+          "id": "finch-fight-fest",
+          "title": "House Finch Feeder Fight Fest",
+          "vimeo_id": "1050607021",
+          "seconds": 10868,
+          "enabled": false,
+          "note": "Off until it is in Livid: Vimeo shows \"This video is not available\" for it since the plan change (checked 2026-10-28). To turn it back on, add its Livid short ID as livid and set enabled to true."
+        },
+        {
+          "id": "backyard-snow",
+          "title": "Backyard Snow Birds",
+          "livid": "GV8xOy87jqkT",
+          "seconds": 475,
+          "enabled": true
+        },
+        {
+          "id": "bird-clips-selects",
+          "title": "Bird Clips: Selects",
+          "vimeo_id": "802513702",
+          "seconds": 572,
+          "enabled": false,
+          "note": "Off until it is in Livid: Vimeo shows \"This video is not available\" for it since the plan change (checked 2026-10-28). To turn it back on, add its Livid short ID as livid and set enabled to true."
+        }
       ]
     },
     {
       "id": "snow-days",
       "name": "Snow days",
       "items": [
-        { "vimeo_id": "1050417825", "title": "Snow Birds & Lo-Fi Beats, Vol. 1", "enabled": true },
-        { "vimeo_id": "911920183", "title": "Backyard Snow Birds", "enabled": true }
+        {
+          "id": "snow-lofi-1",
+          "title": "Snow Birds & Lo-Fi Beats, Vol. 1",
+          "vimeo_id": "1050417825",
+          "seconds": 3197,
+          "enabled": false,
+          "note": "Off until it is in Livid: Vimeo shows \"This video is not available\" for it since the plan change (checked 2026-10-28). To turn it back on, add its Livid short ID as livid and set enabled to true."
+        },
+        {
+          "id": "backyard-snow",
+          "title": "Backyard Snow Birds",
+          "livid": "GV8xOy87jqkT",
+          "seconds": 475,
+          "enabled": true
+        }
       ]
     }
   ],
@@ -34,5 +118,7 @@
       "note": "pending license check",
       "tracks": []
     }
-  ]
+  ],
+  "_overlay": "An item's optional overlay is its names and facts layer (schema 1, Projects/Slow Motion Birds/OVERLAY-LAYER.md), drawn by the page over the video. Items without one play plain.",
+  "_source": "Each film plays from one place. file: the site's own copy, played in the page's own video element, so the names and facts can follow its clock and the next film starts when it ends. livid: the Livid embed (livid.com/embed/<livid>), which has no player API, so the page moves on after the film's length in seconds. vimeo_id: films not in Livid yet, still played from Vimeo the same way until they are uploaded."
 }
